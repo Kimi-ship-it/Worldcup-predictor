@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup 2026 - 比赛比分预测</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a14;
+    --surface: #141428;
+    --surface-alt: #1e1e38;
+    --border: #2a2a48;
+    --text: #e0e0e8;
+    --text-dim: #7a7a9a;
+    --accent: #00d4aa;
+    --accent-glow: rgba(0, 212, 170, 0.12);
+    --home: #3388ff;
+    --away: #ff5555;
+    --draw: #ffaa22;
+    --gold: #ffd700;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(0, 212, 170, 0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(51, 136, 255, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+
+  .header .sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  /* Team selection row */
+  .matchup {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .team-picker {
+    flex: 1;
+    min-width: 200px;
+    max-width: 320px;
+  }
+
+  .team-picker label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .team-picker select {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237a7a9a'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    transition: border-color 0.2s;
+  }
+
+  .team-picker select:hover { border-color: var(--accent); }
+  .team-picker select:focus { outline: none; border-color: var(--accent); }
+
+  .vs-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  /* Predict button */
+  .btn-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .btn {
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: var(--surface-alt);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--text-dim); }
+
+  /* Results area */
+  .results {
+    display: none;
+  }
+
+  .results.show { display: block; }
+
+  /* Predicted score */
+  .predicted-score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .pred-team {
+    text-align: center;
+    flex: 1;
+    max-width: 220px;
+  }
+
+  .pred-team .name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .pred-team .goals {
+    font-size: 56px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+
+  .pred-team.home .goals { color: var(--home); }
+  .pred-team.away .goals { color: var(--away); }
+
+  .pred-divider {
+    font-size: 18px;
+    color: var(--text-dim);
+    font-weight: 300;
+    margin-top: 20px;
+  }
+
+  /* Probabilities */
+  .prob-section {
+    margin-bottom: 24px;
+  }
+
+  .prob-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .prob-bars {
+    display: flex;
+    gap: 8px;
+  }
+
+  .prob-bar-item {
+    flex: 1;
+    text-align: center;
+  }
+
+  .prob-bar-wrap {
+    height: 8px;
+    background: var(--surface-alt);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .prob-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+
+  .prob-bar-fill.home-fill { background: var(--home); }
+  .prob-bar-fill.draw-fill { background: var(--draw); }
+  .prob-bar-fill.away-fill { background: var(--away); }
+
+  .prob-value {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .prob-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  /* Score distribution chart */
+  .score-dist {
+    margin-bottom: 24px;
+  }
+
+  .dist-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .dist-table td {
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text-dim);
+    cursor: default;
+    transition: all 0.15s;
+    border-radius: 6px;
+  }
+
+  .dist-table tr:first-child td {
+    font-weight: 700;
+    color: var(--text-dim);
+    font-size: 11px;
+  }
+
+  .dist-table td:first-child {
+    text-align: left;
+    font-weight: 700;
+  }
+
+  .dist-table .hot {
+    background: rgba(0, 212, 170, 0.25);
+    color: var(--accent);
+    font-weight: 800;
+    border-radius: 6px;
+  }
+
+  .dist-table .warm {
+    background: rgba(0, 212, 170, 0.1);
+    color: var(--text);
+  }
+
+  .dist-table .cool {
+    background: rgba(128, 128, 180, 0.06);
+  }
+
+  /* Info cards */
+  .info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .info-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .info-card .value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .info-card .label {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Team strength bars */
+  .strength-section {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+  }
+
+  .strength-col {
+    flex: 1;
+    padding: 12px 16px;
+  }
+
+  .strength-col:first-child {
+    border-right: 1px solid var(--border);
+  }
+
+  .strength-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .strength-bar-wrap {
+    height: 6px;
+    background: var(--surface-alt);
+    border-radius: 3px;
+    margin-bottom: 4px;
+    overflow: hidden;
+  }
+
+  .strength-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+
+  .home-strength { background: var(--home); }
+  .away-strength { background: var(--away); }
+
+  .strength-value {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .strength-value.home-v { color: var(--home); }
+  .strength-value.away-v { color: var(--away); }
+
+  /* Disclaimer */
+  .disclaimer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .matchup { flex-direction: column; }
+    .team-picker { max-width: 100%; }
+    .vs-box { margin: 8px 0; }
+    .predicted-score { padding: 16px; gap: 12px; }
+    .pred-team .goals { font-size: 40px; }
+    .pred-team .name { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <h1>World Cup 2026 Match Predictor</h1>
+    <div class="sub">基于球队实力评分的概率模型预测 &middot; Poisson Distribution Model</div>
+  </div>
+
+  <div class="card">
+    <!-- Team Selection -->
+    <div class="matchup">
+      <div class="team-picker">
+        <label>Home Team / 主队</label>
+        <select id="homeTeam">
+          <option value="">-- 选择主队 --</option>
+        </select>
+      </div>
+      <div class="vs-box">VS</div>
+      <div class="team-picker">
+        <label>Away Team / 客队</label>
+        <select id="awayTeam">
+          <option value="">-- 选择客队 --</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" id="predictBtn">Predict Match</button>
+      <button class="btn btn-secondary" id="simBtn">Simulate 1000 Matches</button>
+      <button class="btn btn-secondary" id="swapBtn">Swap</button>
+    </div>
+
+    <!-- Results -->
+    <div class="results" id="results">
+      <!-- Predicted Score -->
+      <div class="predicted-score">
+        <div class="pred-team home">
+          <div class="name" id="predHomeName">-</div>
+          <div class="goals" id="predHomeGoals">0</div>
+        </div>
+        <div class="pred-divider">:</div>
+        <div class="pred-team away">
+          <div class="name" id="predAwayName">-</div>
+          <div class="goals" id="predAwayGoals">0</div>
+        </div>
+      </div>
+
+      <!-- Win/Draw/Loss Probability -->
+      <div class="prob-section">
+        <div class="prob-title">Match Outcome Probability</div>
+        <div class="prob-bars">
+          <div class="prob-bar-item">
+            <div class="prob-value home-v" id="probHome">-</div>
+            <div class="prob-bar-wrap"><div class="prob-bar-fill home-fill" id="barHome" style="width:0%"></div></div>
+            <div class="prob-label">Home Win</div>
+          </div>
+          <div class="prob-bar-item">
+            <div class="prob-value" id="probDraw" style="color:var(--draw)">-</div>
+            <div class="prob-bar-wrap"><div class="prob-bar-fill draw-fill" id="barDraw" style="width:0%"></div></div>
+            <div class="prob-label">Draw</div>
+          </div>
+          <div class="prob-bar-item">
+            <div class="prob-value away-v" id="probAway">-</div>
+            <div class="prob-bar-wrap"><div class="prob-bar-fill away-fill" id="barAway" style="width:0%"></div></div>
+            <div class="prob-label">Away Win</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Strength -->
+      <div class="strength-section">
+        <div class="strength-col">
+          <div class="strength-label" id="strengthHomeLabel">-</div>
+          <div class="strength-bar-wrap">
+            <div class="strength-fill home-strength" id="strengthHomeBar" style="width:50%"></div>
+          </div>
+          <div class="strength-value home-v" id="strengthHomeVal">-</div>
+        </div>
+        <div class="strength-col">
+          <div class="strength-label" id="strengthAwayLabel">-</div>
+          <div class="strength-bar-wrap">
+            <div class="strength-fill away-strength" id="strengthAwayBar" style="width:50%"></div>
+          </div>
+          <div class="strength-value away-v" id="strengthAwayVal">-</div>
+        </div>
+      </div>
+
+      <!-- Score Distribution -->
+      <div class="score-dist">
+        <div class="prob-title">Score Distribution Heatmap</div>
+        <table class="dist-table" id="distTable"></table>
+      </div>
+
+      <!-- Additional stats cards -->
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="value" id="expectedGoals">-</div>
+          <div class="label">Expected Total Goals</div>
+        </div>
+        <div class="info-card">
+          <div class="value" id="over25">-</div>
+          <div class="label">Over 2.5 Goals</div>
+        </div>
+        <div class="info-card">
+          <div class="value" id="btts">-</div>
+          <div class="label">Both Teams Score</div>
+        </div>
+        <div class="info-card">
+          <div class="value" id="confidence">-</div>
+          <div class="label">Prediction Confidence</div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        This prediction is based on a statistical Poisson model using team strength ratings. Actual match results may vary significantly. For entertainment purposes only.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Team data with strength ratings (normalized around 1.0, higher = stronger)
+  const TEAMS = [
+    { id: "1",  name: "Mexico", group: "A", rating: 0.85 },
+    { id: "2",  name: "South Africa", group: "A", rating: 0.58 },
+    { id: "3",  name: "South Korea", group: "A", rating: 0.72 },
+    { id: "4",  name: "Czech Republic", group: "A", rating: 0.78 },
+    { id: "5",  name: "Canada", group: "B", rating: 0.62 },
+    { id: "6",  name: "Bosnia and Herzegovina", group: "B", rating: 0.60 },
+    { id: "7",  name: "Qatar", group: "B", rating: 0.48 },
+    { id: "8",  name: "Switzerland", group: "B", rating: 0.82 },
+    { id: "9",  name: "Brazil", group: "C", rating: 0.95 },
+    { id: "10", name: "Morocco", group: "C", rating: 0.75 },
+    { id: "11", name: "Haiti", group: "C", rating: 0.28 },
+    { id: "12", name: "Scotland", group: "C", rating: 0.65 },
+    { id: "13", name: "United States", group: "D", rating: 0.80 },
+    { id: "14", name: "Paraguay", group: "D", rating: 0.62 },
+    { id: "15", name: "Australia", group: "D", rating: 0.55 },
+    { id: "16", name: "Turkey", group: "D", rating: 0.72 },
+    { id: "17", name: "Germany", group: "E", rating: 0.90 },
+    { id: "18", name: "Cura\u00e7ao", group: "E", rating: 0.25 },
+    { id: "19", name: "Ivory Coast", group: "E", rating: 0.68 },
+    { id: "20", name: "Ecuador", group: "E", rating: 0.66 },
+    { id: "21", name: "Netherlands", group: "F", rating: 0.88 },
+    { id: "22", name: "Japan", group: "F", rating: 0.78 },
+    { id: "23", name: "Sweden", group: "F", rating: 0.74 },
+    { id: "24", name: "Tunisia", group: "F", rating: 0.52 },
+    { id: "25", name: "Belgium", group: "G", rating: 0.86 },
+    { id: "26", name: "Egypt", group: "G", rating: 0.58 },
+    { id: "27", name: "Iran", group: "G", rating: 0.65 },
+    { id: "28", name: "New Zealand", group: "G", rating: 0.30 },
+    { id: "29", name: "Spain", group: "H", rating: 0.92 },
+    { id: "30", name: "Cape Verde", group: "H", rating: 0.35 },
+    { id: "31", name: "Saudi Arabia", group: "H", rating: 0.50 },
+    { id: "32", name: "Uruguay", group: "H", rating: 0.82 },
+    { id: "33", name: "France", group: "I", rating: 0.94 },
+    { id: "34", name: "Senegal", group: "I", rating: 0.68 },
+    { id: "35", name: "Iraq", group: "I", rating: 0.38 },
+    { id: "36", name: "Norway", group: "I", rating: 0.70 },
+    { id: "37", name: "Argentina", group: "J", rating: 0.93 },
+    { id: "38", name: "Algeria", group: "J", rating: 0.55 },
+    { id: "39", name: "Austria", group: "J", rating: 0.68 },
+    { id: "40", name: "Jordan", group: "J", rating: 0.32 },
+    { id: "41", name: "Portugal", group: "K", rating: 0.88 },
+    { id: "42", name: "DR Congo", group: "K", rating: 0.42 },
+    { id: "43", name: "Uzbekistan", group: "K", rating: 0.40 },
+    { id: "44", name: "Colombia", group: "K", rating: 0.76 },
+    { id: "45", name: "England", group: "L", rating: 0.90 },
+    { id: "46", name: "Croatia", group: "L", rating: 0.84 },
+    { id: "47", name: "Ghana", group: "L", rating: 0.60 },
+    { id: "48", name: "Panama", group: "L", rating: 0.36 },
+  ];
+
+  const HOME_ADVANTAGE = 0.30; // home team gets +0.30 rating boost
+  const AVG_GOALS = 2.75; // average goals per match in world cups
+
+  // DOM refs
+  const $homeSelect = document.getElementById('homeTeam');
+  const $awaySelect = document.getElementById('awayTeam');
+  const $results = document.getElementById('results');
+
+  // Build select options
+  function buildTeamOptions() {
+    const sorted = [...TEAMS].sort((a, b) => a.name.localeCompare(b.name));
+    const html = sorted.map(t =>
+      `<option value="${t.id}">${t.name} (Group ${t.group})</option>`
+    ).join('');
+    $homeSelect.innerHTML = '<option value="">-- Select Home Team --</option>' + html;
+    $awaySelect.innerHTML = '<option value="">-- Select Away Team --</option>' + html;
+  }
+
+  // Poisson probability mass function
+  function poissonPMF(k, lambda) {
+    if (k < 0 || lambda <= 0) return 0;
+    let logP = -lambda + k * Math.log(lambda);
+    for (let i = 2; i <= k; i++) logP -= Math.log(i);
+    return Math.exp(logP);
+  }
+
+  // Compute score distribution matrix (0-7 goals each side)
+  function computeScoreMatrix(lambdaHome, lambdaAway) {
+    const matrix = [];
+    const maxG = 7;
+    for (let h = 0; h <= maxG; h++) {
+      matrix[h] = [];
+      for (let a = 0; a <= maxG; a++) {
+        matrix[h][a] = poissonPMF(h, lambdaHome) * poissonPMF(a, lambdaAway);
+      }
+    }
+    return matrix;
+  }
+
+  // Compute probabilities from matrix
+  function computeProbabilities(matrix) {
+    let homeWin = 0, draw = 0, awayWin = 0;
+    let totalGoals = 0;
+    let over25 = 0;
+    let btts = 0;
+    let totalProb = 0;
+
+    for (let h = 0; h <= 7; h++) {
+      for (let a = 0; a <= 7; a++) {
+        const p = matrix[h][a];
+        totalProb += p;
+        if (h > a) homeWin += p;
+        else if (h === a) draw += p;
+        else awayWin += p;
+        totalGoals += (h + a) * p;
+        if (h + a > 2.5) over25 += p;
+        if (h > 0 && a > 0) btts += p;
+      }
+    }
+
+    // Normalize
+    const norm = totalProb;
+    return {
+      homeWin: homeWin / norm,
+      draw: draw / norm,
+      awayWin: awayWin / norm,
+      expectedGoals: totalGoals / norm,
+      over25: over25 / norm,
+      btts: btts / norm,
+      mostLikelyHome: 0,
+      mostLikelyAway: 0
+    };
+  }
+
+  // Find most likely score
+  function findMostLikelyScore(matrix) {
+    let maxP = 0;
+    let bestH = 0, bestA = 0;
+    for (let h = 0; h <= 7; h++) {
+      for (let a = 0; a <= 7; a++) {
+        if (matrix[h][a] > maxP) {
+          maxP = matrix[h][a];
+          bestH = h;
+          bestA = a;
+        }
+      }
+    }
+    return { home: bestH, away: bestA, prob: maxP };
+  }
+
+  // Simulate single match
+  function simulateMatch(lambdaHome, lambdaAway) {
+    // Poisson random via Knuth
+    const Lh = Math.exp(-lambdaHome);
+    let kh = 0, ph = 1;
+    do { kh++; ph *= Math.random(); } while (ph > Lh);
+    kh--;
+    const La = Math.exp(-lambdaAway);
+    let ka = 0, pa = 1;
+    do { ka++; pa *= Math.random(); } while (pa > La);
+    ka--;
+    return { home: kh, away: ka };
+  }
+
+  // Simulate N matches
+  function simulateN(lambdaHome, lambdaAway, n) {
+    let homeWins = 0, draws = 0, awayWins = 0;
+    for (let i = 0; i < n; i++) {
+      const r = simulateMatch(lambdaHome, lambdaAway);
+      if (r.home > r.away) homeWins++;
+      else if (r.home === r.away) draws++;
+      else awayWins++;
+    }
+    return { homeWins: homeWins / n, draws: draws / n, awayWins: awayWins / n };
+  }
+
+  // Determine confidence level text
+  function getConfidence(prob) {
+    const p = Math.max(prob.homeWin, prob.draw, prob.awayWin);
+    if (p >= 0.55) return 'High';
+    if (p >= 0.45) return 'Medium';
+    return 'Low';
+  }
+
+  // Render results
+  function renderResults(homeTeam, awayTeam, lambdaHome, lambdaAway, matrix, probs, mostLikely, simResult) {
+    $results.classList.add('show');
+
+    // Predicted score
+    document.getElementById('predHomeName').textContent = homeTeam.name;
+    document.getElementById('predAwayName').textContent = awayTeam.name;
+    document.getElementById('predHomeGoals').textContent = mostLikely.home;
+    document.getElementById('predAwayGoals').textContent = mostLikely.away;
+
+    // Probabilities
+    const pHome = (probs.homeWin * 100).toFixed(1);
+    const pDraw = (probs.draw * 100).toFixed(1);
+    const pAway = (probs.awayWin * 100).toFixed(1);
+
+    document.getElementById('probHome').textContent = pHome + '%';
+    document.getElementById('probDraw').textContent = pDraw + '%';
+    document.getElementById('probAway').textContent = pAway + '%';
+    document.getElementById('barHome').style.width = pHome + '%';
+    document.getElementById('barDraw').style.width = pDraw + '%';
+    document.getElementById('barAway').style.width = pAway + '%';
+
+    // Team strength
+    const maxRating = Math.max(homeTeam.rating, awayTeam.rating, 1.2);
+    const homeWidth = (homeTeam.rating / 1.2 * 100).toFixed(0);
+    const awayWidth = (awayTeam.rating / 1.2 * 100).toFixed(0);
+
+    document.getElementById('strengthHomeLabel').textContent = homeTeam.name;
+    document.getElementById('strengthAwayLabel').textContent = awayTeam.name;
+    document.getElementById('strengthHomeVal').textContent = 'Rating: ' + homeTeam.rating.toFixed(2);
+    document.getElementById('strengthAwayVal').textContent = 'Rating: ' + awayTeam.rating.toFixed(2);
+    document.getElementById('strengthHomeBar').style.width = homeWidth + '%';
+    document.getElementById('strengthAwayBar').style.width = awayWidth + '%';
+
+    // Score distribution heatmap
+    let distHtml = '<tr><td></td>';
+    for (let a = 0; a <= 7; a++) distHtml += '<td>' + a + '</td>';
+    distHtml += '</tr>';
+
+    // Find max probability for color scaling
+    let maxProb = 0;
+    for (let h = 0; h <= 7; h++)
+      for (let a = 0; a <= 7; a++)
+        maxProb = Math.max(maxProb, matrix[h][a]);
+
+    for (let h = 0; h <= 7; h++) {
+      distHtml += '<tr><td>' + h + '</td>';
+      for (let a = 0; a <= 7; a++) {
+        const p = matrix[h][a];
+        const ratio = maxProb > 0 ? p / maxProb : 0;
+        let cls = 'cool';
+        if (ratio >= 0.6) cls = 'hot';
+        else if (ratio >= 0.2) cls = 'warm';
+        distHtml += '<td class="' + cls + '">' + (p * 100).toFixed(1) + '%</td>';
+      }
+      distHtml += '</tr>';
+    }
+    document.getElementById('distTable').innerHTML = distHtml;
+
+    // Info cards
+    document.getElementById('expectedGoals').textContent = probs.expectedGoals.toFixed(2);
+    document.getElementById('over25').textContent = (probs.over25 * 100).toFixed(0) + '%';
+    document.getElementById('btts').textContent = (probs.btts * 100).toFixed(0) + '%';
+    document.getElementById('confidence').textContent = getConfidence(probs);
+  }
+
+  // Main predict function
+  function predict(simulate = false) {
+    const homeId = $homeSelect.value;
+    const awayId = $awaySelect.value;
+
+    if (!homeId || !awayId) {
+      alert('Please select both teams.');
+      return;
+    }
+
+    if (homeId === awayId) {
+      alert('Please select two different teams.');
+      return;
+    }
+
+    const homeTeam = TEAMS.find(t => t.id === homeId);
+    const awayTeam = TEAMS.find(t => t.id === awayId);
+
+    // Calculate expected goals (lambda) for each team
+    // Base expected goals, scaled by team rating, with home advantage
+    const baseHomeLambda = AVG_GOALS * (homeTeam.rating + HOME_ADVANTAGE) / (1.0 + HOME_ADVANTAGE / 2);
+    const baseAwayLambda = AVG_GOALS * awayTeam.rating / (1.0 + HOME_ADVANTAGE / 2);
+
+    // Scale to keep average goals reasonable
+    const totalLambda = baseHomeLambda + baseAwayLambda;
+    const scale = AVG_GOALS / totalLambda;
+    const lambdaHome = baseHomeLambda * scale;
+    const lambdaAway = baseAwayLambda * scale;
+
+    const matrix = computeScoreMatrix(lambdaHome, lambdaAway);
+    const probs = computeProbabilities(matrix);
+    const mostLikely = findMostLikelyScore(matrix);
+
+    let simResult = null;
+    if (simulate) {
+      simResult = simulateN(lambdaHome, lambdaAway, 1000);
+    }
+
+    renderResults(homeTeam, awayTeam, lambdaHome, lambdaAway, matrix, probs, mostLikely, simResult);
+  }
+
+  function swapTeams() {
+    const hVal = $homeSelect.value;
+    const aVal = $awaySelect.value;
+    $homeSelect.value = aVal;
+    $awaySelect.value = hVal;
+  }
+
+  // Event listeners
+  document.getElementById('predictBtn').addEventListener('click', () => predict(false));
+  document.getElementById('simBtn').addEventListener('click', () => predict(true));
+  document.getElementById('swapBtn').addEventListener('click', swapTeams);
+
+  // Initialize
+  buildTeamOptions();
+
+  // Default: Mexico vs South Korea
+  setTimeout(() => {
+    $homeSelect.value = '1';
+    $awaySelect.value = '3';
+  }, 0);
+})();
+</script>
+
+</body>
+</html>
