@@ -227,6 +227,53 @@
     background: var(--surface-alt); border: 1px dashed var(--border); border-radius: 12px; }
   .om-foot { font-size: 11px; color: var(--text-dim); margin-top: 12px; line-height: 1.7; }
 
+  /* Daily match board / 当日比赛汇总 — 默认藏，模拟完成后加 .ds-show 才显示
+     （同时仍受 .results.pre 约束；双保险避免「整卡消失」） */
+  #dailySummaryCard { display: none !important; }
+  #results:not(.pre).show #dailySummaryCard.ds-show { display: block !important; }
+  .ds-stamp { margin-left: 10px; font-size: 11px; font-weight: 600; color: var(--text-dim); }
+  .ds-list { display: flex; flex-direction: column; gap: 10px; }
+  .ds-row { display: grid; grid-template-columns: 72px minmax(160px, 1.2fr) minmax(100px, 0.7fr) minmax(160px, 1.1fr) minmax(130px, 1fr) 48px;
+    gap: 12px; align-items: center; background: var(--surface-alt); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px; }
+  .ds-time { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px;
+    color: var(--text-dim); line-height: 1.45; text-align: center; }
+  .ds-time b { display: block; color: var(--text); font-size: 13px; font-weight: 800; }
+  .ds-match .ds-teams { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .ds-match .ds-tier { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+  .ds-match .ds-hcap, .ds-match .ds-kelly { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+  .ds-match .ds-kelly b { color: var(--accent); font-weight: 700; }
+  .ds-score { text-align: center; }
+  .ds-score .ds-ml { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; }
+  .ds-score .ds-mlp { font-size: 12px; font-weight: 700; color: var(--accent); margin-top: 2px; }
+  .ds-score .ds-rule { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+  .ds-alt { text-align: left; }
+  .ds-alt .ds-top6-lab { font-size: 10px; color: var(--text-dim); font-weight: 700; margin-bottom: 6px; }
+  .ds-alt .ds-top6 { display: flex; flex-wrap: wrap; gap: 5px; }
+  .ds-alt .ds-2nd { display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+    min-width: 44px; background: rgba(74,144,226,0.15); border: 1px solid rgba(74,144,226,0.4);
+    color: #7eb6ff; border-radius: 6px; padding: 3px 6px; font-size: 12px; font-weight: 800; line-height: 1.2; }
+  .ds-alt .ds-2nd.rank1 { background: var(--accent-glow); border-color: rgba(0,212,170,0.45); color: var(--accent); }
+  .ds-alt .ds-2nd small { font-size: 9px; font-weight: 600; opacity: .9; margin-top: 1px; }
+  .ds-alt .ds-rest { font-size: 10px; color: var(--text-dim); margin-top: 6px; }
+  .ds-wdl { font-size: 11px; line-height: 1.55; color: var(--text-dim); }
+  .ds-wdl .ds-out { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .ds-wdl .r-h { color: var(--home); } .ds-wdl .r-d { color: var(--draw); } .ds-wdl .r-a { color: var(--away); }
+  .ds-tag { justify-self: end; font-size: 11px; font-weight: 800; color: var(--draw);
+    border: 1px solid rgba(255,200,87,0.45); background: rgba(255,200,87,0.08);
+    border-radius: 6px; padding: 4px 8px; white-space: nowrap; }
+  .ds-tag.done { color: var(--text-dim); border-color: var(--border); background: var(--surface-2); }
+  .ds-tag.live { color: var(--away); border-color: rgba(255,85,102,0.55); background: rgba(255,85,102,0.12); }
+  .ds-empty { font-size: 12px; color: var(--text-dim); padding: 18px; text-align: center;
+    background: var(--surface-alt); border: 1px dashed var(--border); border-radius: 12px; }
+  .ds-note { font-size: 11px; color: var(--text-dim); margin-top: 12px; line-height: 1.7; }
+  @media (max-width: 980px) {
+    .ds-row { grid-template-columns: 64px 1fr; gap: 8px 12px; }
+    .ds-score, .ds-alt, .ds-wdl, .ds-tag { grid-column: 1 / -1; }
+    .ds-score, .ds-alt { text-align: left; }
+    .ds-tag { justify-self: start; }
+  }
+
   /* Top scores */
   .topscores { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
   .topscore-item { background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
@@ -823,6 +870,13 @@
         <div class="info-card"><div class="value" id="mConf">-</div><div class="label">预测置信度 Confidence</div></div>
         <div class="info-card"><div class="value" id="mSim">-</div><div class="label">模拟胜率 Sim (主/平/客)</div></div>
       </div>
+    </div>
+
+    <!-- Daily match board：仅蒙特卡洛模拟完成后随 results 非 pre 态显示；置于关键指标下方 -->
+    <div class="card" id="dailySummaryCard">
+      <div class="card-title">当日比赛汇总 / Daily Match Board<span class="ds-stamp" id="dsStamp"></span></div>
+      <div id="dailySummary"></div>
+      <div class="ds-note">模拟完成后显示。按上方「日期」筛选当天该赛事全部场次（含已完赛）。主比分与 Top 6 均为模型联合分布中<strong style="color:var(--accent)">概率从高到低</strong>的精确比分；凯利与「市场/最终」为模型估算（含近似抽水），<strong style="color:var(--text-dim)">非实时体彩/开云赔率</strong>。每 30 分钟自动刷新。</div>
     </div>
 
     <div class="disclaimer">
@@ -3021,10 +3075,10 @@
   let TEAMS = WC_TEAMS, SQUADS = WC_SQUADS, RECENT3M = WC_RECENT3M;
 
   /* ---------- Model constants ---------- */
-  const BASE_GOALS = 1.45;       // baseline expected goals per team (neutral)
-  const HOME_FIELD = 1.20;       // home scoring multiplier when not neutral
-  const AWAY_FIELD = 0.88;       // away scoring multiplier when not neutral
-  const RHO = -0.04;             // Dixon-Coles low-score dependence parameter
+  const BASE_GOALS = 1.48;       // baseline expected goals per team (neutral); slightly up to reduce 1-1 mode pile-up
+  const HOME_FIELD = 1.22;       // home scoring multiplier when not neutral
+  const AWAY_FIELD = 0.86;       // away scoring multiplier when not neutral
+  const RHO = -0.02;             // Dixon-Coles low-score dependence (weaker → less artificial 1-1 boost)
   const MAXG = 9;                // goal grid 0..9
 
   let state = { venue: "neutral", homeForm: 0, awayForm: 0, lastModel: null, lockedFinished: false };
@@ -3103,21 +3157,60 @@
     return p;
   }
 
+  // 1X2 lean for score picking. Near-even H/A → treat as draw lean (avoid random 2-1).
+  function leanOutcome(mk) {
+    const H = mk.homeWin, D = mk.draw, A = mk.awayWin;
+    if (Math.abs(H - A) < 0.06 && D >= 0.22) return "D";
+    if (H >= D && H >= A) return "H";
+    if (A >= D && A >= H) return "A";
+    return "D";
+  }
+
+  // Weighted score rank: Poisson mass × 1X2 alignment × proximity to λ × anti-1-1 when sided.
+  // Mirrors 「加权后·Poisson顺位 / 特征规则」— raw argmax piles on 1-1 for similar λ.
+  function scoreWeight(h, a, p, mk, lh, la) {
+    const outcome = leanOutcome(mk);
+    const res = h > a ? "H" : h < a ? "A" : "D";
+    let wOut = res === outcome ? 1.55 : (res === "D" && outcome !== "D" ? 0.70 : 0.88);
+    const prox = Math.exp(-0.55 * ((h - lh) * (h - lh) + (a - la) * (a - la)));
+    let wSpec = 1;
+    if (h === 1 && a === 1) {
+      if (outcome !== "D") wSpec = 0.55;
+      else if (lh + la >= 2.85) wSpec = 0.72;
+      else if (lh + la <= 2.05) wSpec = 0.82;
+    }
+    if (h === 2 && a === 2 && outcome === "D" && lh + la >= 2.9) wOut *= 1.18;
+    if (h === 0 && a === 0 && lh + la >= 2.55) wSpec *= 0.65;
+    // Modest one-goal margins only when the side is not a heavy favorite (avoid 2-1 over 2-0).
+    if (outcome === "H" && h === a + 1 && mk.homeWin < 0.58) wOut *= 1.06;
+    if (outcome === "A" && a === h + 1 && mk.awayWin < 0.58) wOut *= 1.06;
+    return p * wOut * prox * wSpec;
+  }
+
+  // 比分排序一律按联合分布原始概率从高到低（红框主比分 + Top6 同源）
   function topScores(m, n) {
     const arr = [];
     for (let h = 0; h <= 6; h++)
       for (let a = 0; a <= 6; a++)
         arr.push({ h, a, p: m[h][a] });
     arr.sort((x, y) => y.p - x.p);
-    return arr.slice(0, n);
+    return arr.slice(0, n || 6);
   }
 
   function mostLikely(m) {
-    let best = { h:0, a:0, p:0 };
-    for (let h = 0; h <= MAXG; h++)
-      for (let a = 0; a <= MAXG; a++)
-        if (m[h][a] > best.p) best = { h, a, p:m[h][a] };
-    return best;
+    const top = topScores(m, 1)[0] || { h: 0, a: 0, p: 0 };
+    return { h: top.h, a: top.a, p: top.p, rule: "概率最高比分" };
+  }
+
+  function computeLambdas(home, away, venue, homeForm, awayForm) {
+    const venueHome = venue === "home" ? HOME_FIELD : venue === "away" ? AWAY_FIELD : 1.0;
+    const venueAway = venue === "home" ? AWAY_FIELD : venue === "away" ? HOME_FIELD : 1.0;
+    const ha = tournAdj(home), aa = tournAdj(away);
+    const hAtk = clamp01(home.atk + ha.atk), hDef = clamp01(home.def + ha.def);
+    const aAtk = clamp01(away.atk + aa.atk), aDef = clamp01(away.def + aa.def);
+    const lh = BASE_GOALS * attackMult(hAtk) * defenseMult(aDef) * venueHome * formMult(homeForm || 0);
+    const la = BASE_GOALS * attackMult(aAtk) * defenseMult(hDef) * venueAway * formMult(awayForm || 0);
+    return { lh, la, hAtk, hDef, aAtk, aDef };
   }
 
   function fairOdds(p) { return p > 0 ? (1 / p) : 999; }
@@ -3142,17 +3235,9 @@
     if (!homeTeam || !awayTeam) { alert("请选择两支球队"); return; }
     if (homeTeam.id === awayTeam.id) { alert("请选择两支不同的球队"); return; }
 
-    const venueHome = state.venue === "home" ? HOME_FIELD : state.venue === "away" ? AWAY_FIELD : 1.0;
-    const venueAway = state.venue === "home" ? AWAY_FIELD : state.venue === "away" ? HOME_FIELD : 1.0;
-
-    // In-tournament adjustment: each finished WC match nudges a team's effective
-    // attack/defense, so predictions evolve as the group stage unfolds.
-    const ha = tournAdj(homeTeam), aa = tournAdj(awayTeam);
-    const hAtk = clamp01(homeTeam.atk + ha.atk), hDef = clamp01(homeTeam.def + ha.def);
-    const aAtk = clamp01(awayTeam.atk + aa.atk), aDef = clamp01(awayTeam.def + aa.def);
-
-    const lh = BASE_GOALS * attackMult(hAtk) * defenseMult(aDef) * venueHome * formMult(state.homeForm);
-    const la = BASE_GOALS * attackMult(aAtk) * defenseMult(hDef) * venueAway * formMult(state.awayForm);
+    // In-tournament adjustment + venue/form → λ; headline / Top6 = raw probability rank.
+    const { lh, la, hAtk, hDef, aAtk, aDef } = computeLambdas(
+      homeTeam, awayTeam, state.venue, state.homeForm, state.awayForm);
 
     const m = computeMatrix(lh, la);
     const mk = computeMarkets(m);
@@ -4443,6 +4528,18 @@
   }
 
   /* ---------- Reset to 0:0 (pre-analysis state) ---------- */
+  function hideDailySummary() {
+    const card = $("dailySummaryCard");
+    if (card) card.classList.remove("ds-show");
+  }
+
+  function showDailySummary() {
+    const card = $("dailySummaryCard");
+    if (!card) return;
+    try { renderDailySummary(); } catch (e) { console.warn("renderDailySummary", e); }
+    card.classList.add("ds-show");
+  }
+
   function resetPrediction() {
     const home = TEAMS.find(t => t.id === $("homeTeam").value);
     const away = TEAMS.find(t => t.id === $("awayTeam").value);
@@ -4450,6 +4547,7 @@
     state.lockedFinished = false;
     $("results").classList.add("show");
     $("results").classList.add("pre");
+    hideDailySummary();
     $("predHomeName").textContent = home ? home.name.split(" ")[0] : "-";
     $("predAwayName").textContent = away ? away.name.split(" ")[0] : "-";
     $("predHomeGoals").textContent = "0";
@@ -4468,6 +4566,7 @@
     state.lockedFinished = true;
     $("results").classList.add("show");
     $("results").classList.add("pre"); // only the headline shows; detail cards stay hidden
+    hideDailySummary();
     $("predHomeName").textContent = home ? home.name.split(" ")[0] : teamName(fx.home);
     $("predAwayName").textContent = away ? away.name.split(" ")[0] : teamName(fx.away);
     $("predHomeGoals").textContent = fx.hs;
@@ -4486,14 +4585,9 @@
     if (!homeTeam || !awayTeam) { alert("请选择两支球队"); return; }
     if (homeTeam.id === awayTeam.id) { alert("请选择两支不同的球队"); return; }
 
-    // Deterministic analytic model (same as before), computed up front.
-    const venueHome = state.venue === "home" ? HOME_FIELD : state.venue === "away" ? AWAY_FIELD : 1.0;
-    const venueAway = state.venue === "home" ? AWAY_FIELD : state.venue === "away" ? HOME_FIELD : 1.0;
-    const ha = tournAdj(homeTeam), aa = tournAdj(awayTeam);
-    const hAtk = clamp01(homeTeam.atk + ha.atk), hDef = clamp01(homeTeam.def + ha.def);
-    const aAtk = clamp01(awayTeam.atk + aa.atk), aDef = clamp01(awayTeam.def + aa.def);
-    const lh = BASE_GOALS * attackMult(hAtk) * defenseMult(aDef) * venueHome * formMult(state.homeForm);
-    const la = BASE_GOALS * attackMult(aAtk) * defenseMult(hDef) * venueAway * formMult(state.awayForm);
+    // Deterministic analytic model computed up front (headline = max-probability score).
+    const { lh, la, hAtk, hDef, aAtk, aDef } = computeLambdas(
+      homeTeam, awayTeam, state.venue, state.homeForm, state.awayForm);
     const m = computeMatrix(lh, la);
     const mk = computeMarkets(m);
     const top = topScores(m, 6);
@@ -4552,10 +4646,11 @@
 
     $("predHomeName").textContent = shortHome;
     $("predAwayName").textContent = shortAway;
-    // Headline = the single most-likely exact scoreline (joint-distribution argmax),
-    // consistent with the #1 entry in the correct-score Top 6 below.
+    // Headline = weighted most-likely scoreline (aligned with Top 6 #1), not raw Poisson argmax.
     $("predHomeGoals").textContent = ml.h;
     $("predAwayGoals").textContent = ml.a;
+    $("predCaption").textContent = `最可能比分 / ${ml.rule || "加权规则"} · ${ml.h}:${ml.a}（${pct(ml.p)}）`;
+    $("predHint").textContent = `模型 λ ${lh.toFixed(2)}–${la.toFixed(2)} · 1X2 ${pct(mk.homeWin)} / ${pct(mk.draw)} / ${pct(mk.awayWin)} · ${ml.rule || "加权规则"}`;
 
     // 1X2
     $("probHome").textContent = pct(mk.homeWin);
@@ -4607,6 +4702,9 @@
     const conf = Math.max(mk.homeWin, mk.draw, mk.awayWin);
     $("mConf").textContent = conf>=0.55 ? "高 High" : conf>=0.42 ? "中 Med" : "低 Low";
     $("mSim").textContent = sim ? `${(sim.hw*100).toFixed(0)}/${(sim.d*100).toFixed(0)}/${(sim.aw*100).toFixed(0)}` : "未运行";
+
+    // 当日汇总放在关键指标之后渲染并强制显示（模拟完成后）
+    showDailySummary();
   }
 
   function renderMarkets(m, mk) {
@@ -4752,18 +4850,48 @@
     const w = 0.97 / p - 1;
     return Math.max(0.65, Math.min(1.35, w)).toFixed(3);
   }
-  // 中立场、无临场状态修正的「官方平均」基准模型
-  function omModel(home, away) {
-    const ha = tournAdj(home), aa = tournAdj(away);
-    const hAtk = clamp01(home.atk + ha.atk), hDef = clamp01(home.def + ha.def);
-    const aAtk = clamp01(away.atk + aa.atk), aDef = clamp01(away.def + aa.def);
-    const lh = BASE_GOALS * attackMult(hAtk) * defenseMult(aDef);
-    const la = BASE_GOALS * attackMult(aAtk) * defenseMult(hDef);
+  // 真实联赛场次按主队主场；杯赛中立可传 venue="neutral"。无临场 form 修正。
+  function omModel(home, away, venue) {
+    const v = venue || "home";
+    const { lh, la } = computeLambdas(home, away, v, 0, 0);
     const m = computeMatrix(lh, la);
     return { lh, la, m, mk: computeMarkets(m) };
   }
+
+  function strengthTier(team) {
+    const o = (team.atk + team.def) / 2;
+    if (o >= 0.82) return "顶尖";
+    if (o >= 0.72) return "人强";
+    if (o >= 0.62) return "上游";
+    if (o >= 0.52) return "中游";
+    return "下游";
+  }
+
+  function fmtModelHcap(lh, la) {
+    const line = Math.round((la - lh) * 4) / 4; // home perspective Asian line
+    if (Math.abs(line) < 0.01) return "平手";
+    const abs = Math.abs(line).toFixed(2).replace(/\.00$/, "").replace(/\.50$/, ".5").replace(/\.25$/, ".25").replace(/\.75$/, ".75");
+    return line < 0 ? `主让 ${abs}` : `主受让 ${abs}`;
+  }
+
+  function kellyFrac(p, odd) {
+    if (!(p > 0) || !(odd > 1)) return 0;
+    const b = odd - 1;
+    return Math.max(0, (b * p - (1 - p)) / b);
+  }
+
+  function blendMarket(mk) {
+    // Soft market ≈ model with ~8% overround flattened toward 1/3 (proxy, not live books).
+    const flat = 1 / 3, a = 0.78;
+    let h = a * mk.homeWin + (1 - a) * flat;
+    let d = a * mk.draw + (1 - a) * flat;
+    let aw = a * mk.awayWin + (1 - a) * flat;
+    const s = h + d + aw;
+    return { homeWin: h / s, draw: d / s, awayWin: aw / s };
+  }
   function omCard(fx, home, away) {
-    const { lh, la, m, mk } = omModel(home, away);
+    const venue = ACTIVE_COMP.type === "cup" ? "neutral" : "home";
+    const { lh, la, m, mk } = omModel(home, away, venue);
     const expT = lh + la;
     const line = Math.max(0.5, Math.round(expT * 2) / 2);
     const pOver = ouWin(m, line, true), pUnder = ouWin(m, line, false);
@@ -4824,6 +4952,106 @@
        </div>
        ${body}
        <div class="om-foot">仅展示所选日期该赛事的比赛，<strong style="color:var(--accent)">数据每半小时（30 分钟）自动更新一次</strong>。「大球 / 小球」为模型据命中概率反推的亚盘水位（含约 3% 抽水），「盘口」为模型预期总进球，胜平负条为「官方平均基准 + 回退」估算，<strong style="color:var(--text-dim)">非实时博彩赔率</strong>，仅供参考。</div>`;
+  }
+
+  function dsKickParts(fx) {
+    const d = toBeijing(fx.date);
+    if (!d || isNaN(d.getTime())) return { day: "--", hm: "--:--" };
+    const y = d.getUTCFullYear();
+    const mo = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const da = String(d.getUTCDate()).padStart(2, "0");
+    const hm = String(d.getUTCHours()).padStart(2, "0") + ":" + String(d.getUTCMinutes()).padStart(2, "0");
+    return { day: `${y}-${mo}-${da}`, hm };
+  }
+
+  function dsRow(fx, home, away) {
+    const st = statusOf(fx);
+    const venue = ACTIVE_COMP.type === "cup" ? "neutral" : "home";
+    const { lh, la, m, mk } = omModel(home, away, venue);
+    const top = topScores(m, 6); // 概率从高到低 Top6
+    const ml = top[0] || { h: 0, a: 0, p: 0 };
+    const topP = top.reduce((s, x) => s + x.p, 0);
+    const restP = Math.max(0, 1 - topP);
+    const mkt = blendMarket(mk);
+    const fin = {
+      homeWin: 0.55 * mk.homeWin + 0.45 * mkt.homeWin,
+      draw: 0.55 * mk.draw + 0.45 * mkt.draw,
+      awayWin: 0.55 * mk.awayWin + 0.45 * mkt.awayWin,
+    };
+    const oddH = (1 / Math.max(0.05, mk.homeWin)) * 0.92;
+    const oddD = (1 / Math.max(0.05, mk.draw)) * 0.92;
+    const oddA = (1 / Math.max(0.05, mk.awayWin)) * 0.92;
+    const kH = kellyFrac(mk.homeWin, oddH), kD = kellyFrac(mk.draw, oddD), kA = kellyFrac(mk.awayWin, oddA);
+    const lean = leanOutcome(mk);
+    const hn = home.name.split(" ")[0], an = away.name.split(" ")[0];
+    let outTxt = lean === "H" ? `主胜 (${hn})` : lean === "A" ? `客胜 (${an})` : "平局";
+    if (st.done) outTxt = fx.hs === fx.as ? `完场平 ${fx.hs}:${fx.as}` : (fx.hs > fx.as ? `完场主胜 ${fx.hs}:${fx.as}` : `完场客胜 ${fx.hs}:${fx.as}`);
+    const { day, hm } = dsKickParts(fx);
+    const hcap = fmtModelHcap(lh, la);
+    const tag = st.done ? "完场" : st.live ? "进行中" : "常规";
+    const tagCls = st.done ? "done" : st.live ? "live" : "";
+    const mlShow = st.done ? `${fx.hs}:${fx.as}` : `${ml.h}:${ml.a}`;
+    const mlPct = st.done ? "完场" : `占比 ${(ml.p * 100).toFixed(1)}%`;
+    const rule = st.done ? "实际比分" : "概率最高比分";
+    const top6Html = st.done
+      ? `<div class="ds-2nd">-</div>`
+      : top.map((s, i) =>
+          `<div class="ds-2nd${i === 0 ? " rank1" : ""}">${s.h}:${s.a}<small>${(s.p * 100).toFixed(1)}%</small></div>`
+        ).join("");
+    return `<div class="ds-row">
+      <div class="ds-time">${day}<b>${hm}</b></div>
+      <div class="ds-match">
+        <div class="ds-teams">${hn} vs ${an}</div>
+        <div class="ds-tier">实力 ${strengthTier(home)} vs ${strengthTier(away)}</div>
+        <div class="ds-hcap">模型盘口 ${hcap} · 预期 ${lh.toFixed(2)}-${la.toFixed(2)} · ${hcap === "平手" ? "相对均衡" : (la - lh < 0 ? "主队让球" : "主队受让")}</div>
+        <div class="ds-kelly">凯利指数 主<b>${kH.toFixed(2)}</b> / 平<b>${kD.toFixed(2)}</b> / 客<b>${kA.toFixed(2)}</b> · 模型近似</div>
+      </div>
+      <div class="ds-score">
+        <div class="ds-ml">${mlShow}</div>
+        <div class="ds-mlp">${mlPct}</div>
+        <div class="ds-rule">${rule}</div>
+      </div>
+      <div class="ds-alt">
+        <div class="ds-top6-lab">最可能比分榜 Top 6</div>
+        <div class="ds-top6">${top6Html}</div>
+        <div class="ds-rest">${st.done ? "" : `其他未列 ${(restP * 100).toFixed(1)}%`}</div>
+      </div>
+      <div class="ds-wdl">
+        <div class="ds-out">${outTxt}</div>
+        <div>模型 <span class="r-h">${(mk.homeWin * 100).toFixed(0)}</span>/<span class="r-d">${(mk.draw * 100).toFixed(0)}</span>/<span class="r-a">${(mk.awayWin * 100).toFixed(0)}</span>%</div>
+        <div>市场 <span class="r-h">${(mkt.homeWin * 100).toFixed(0)}</span>/<span class="r-d">${(mkt.draw * 100).toFixed(0)}</span>/<span class="r-a">${(mkt.awayWin * 100).toFixed(0)}</span>%</div>
+        <div>最终 <span class="r-h">${(fin.homeWin * 100).toFixed(0)}</span>/<span class="r-d">${(fin.draw * 100).toFixed(0)}</span>/<span class="r-a">${(fin.awayWin * 100).toFixed(0)}</span>%</div>
+      </div>
+      <div class="ds-tag ${tagCls}">${tag}</div>
+    </div>`;
+  }
+
+  function renderDailySummary() {
+    const el = $("dailySummary"); if (!el) return;
+    const ds = $("dateSelect");
+    const dateF = ds ? ds.value : "";
+    let valid = (typeof fixtures !== "undefined" && fixtures ? fixtures : []).filter(fx => validFx(fx));
+    // 未选日期时：优先用当前所选场次的日期，否则取最近一场
+    let day = dateF;
+    if (!day) {
+      const sel = $("fixtureSelect");
+      const cur = sel && sel.value ? (fixtures || []).find(f => String(f.id) === String(sel.value)) : null;
+      day = cur ? dateKey(cur) : (valid.length ? dateKey(valid[0]) : "");
+    }
+    if (day) valid = valid.filter(fx => dateKey(fx) === day);
+    valid.sort((a, b) => parseKickoff(a.date) - parseKickoff(b.date) || (+a.id - +b.id));
+    const rows = [];
+    for (const fx of valid) {
+      const home = TEAMS.find(t => t.id === fx.home), away = TEAMS.find(t => t.id === fx.away);
+      if (!home || !away) continue;
+      try { rows.push(dsRow(fx, home, away)); } catch (e) { console.warn("dsRow", fx && fx.id, e); }
+      if (rows.length >= 24) break;
+    }
+    const stamp = $("dsStamp");
+    if (stamp) stamp.textContent = day ? `· ${dateLabel(day)} · ${omNow()}` : `· ${omNow()}`;
+    el.innerHTML = rows.length
+      ? `<div class="ds-list">${rows.join("")}</div>`
+      : `<div class="ds-empty">该日期暂无比赛（请在上方选择带真实赛程的赛事与日期后重新模拟）</div>`;
   }
 
   function renderHeatmap(m) {
@@ -5870,7 +6098,8 @@
 
   function onDateChange() {
     buildFixtureSelect();
-    renderOddsMonitor(); // 盘口监控只展示选定当天的比赛
+    renderOddsMonitor();
+    renderDailySummary(); // 盘口监控只展示选定当天的比赛
     if (!$("fixtureSelect").value) { showLiveBanner(null); resetPrediction(); } // selection cleared by filter
   }
 
@@ -5944,6 +6173,7 @@
       const short = comp.name.split(" ")[0];
       setDataStatus("online", `${short} · 真实赛程（北京时间 · 共 ${fixtures.length} 场，无实时比分）· 选择比赛后可模拟`);
       renderOddsMonitor();
+      renderDailySummary();
       return;
     }
 
@@ -5956,6 +6186,7 @@
     const short = comp.name.split(" ")[0];
     setDataStatus("", `${short} · 暂无进行中的真实赛程（未收录实时赛程 / 当前非赛季）· 可在下方手动选择两队进行模拟`);
     renderOddsMonitor();
+    renderDailySummary();
   }
 
   async function loadFixtures() {
@@ -5974,6 +6205,7 @@
       const liveCount = fixtures.filter(f => statusOf(f).live).length;
       setDataStatus("online", `实时数据已连接 · 共 ${fixtures.length} 场${liveCount?` · ${liveCount} 场进行中`:""} · ${new Date().toLocaleTimeString("zh-CN",{hour12:false})} 更新`);
       renderOddsMonitor();
+      renderDailySummary();
       // refresh live banner if a fixture is selected
       const sel = $("fixtureSelect").value;
       if (sel) {
@@ -5994,6 +6226,7 @@
       buildFixtureSelect();
       setDataStatus("offline", "实时接口暂不可用,已载入内置赛程(无实时比分)。可点「刷新比分」重试。");
       renderOddsMonitor();
+      renderDailySummary();
     }
   }
 
@@ -6067,7 +6300,8 @@
   /* ---------- Boot ---------- */
   buildCompSelect();
   setCompetition(ACTIVE_COMP.id); // builds team options, resets 0:0 view, loads WC fixtures
-  renderOddsMonitor();            // 盘口关联实时监控首屏渲染（赛程就绪后各钩子会再刷新）
+  renderOddsMonitor();
+  renderDailySummary();            // 盘口关联实时监控首屏渲染（赛程就绪后各钩子会再刷新）
   launchConfetti();               // 开屏撒花庆祝特效（约 5 秒后自动淡出）
   renderLicense();                // paint CDK box (input if unlicensed, status if active)
   applyLock();                    // gate the Monte Carlo action until activated
@@ -6098,7 +6332,7 @@
   setInterval(() => { if (state.lastModel && ACTIVE_COMP.type === "cup") renderKnockout(); }, 60 * 60 * 1000);
 
   // 盘口关联实时监控（综合监控）：每 30 分钟自动刷新一次（重置时间戳、重算各场水位/胜平负）
-  setInterval(renderOddsMonitor, 30 * 60 * 1000);
+  setInterval(() => { renderOddsMonitor(); renderDailySummary(); }, 30 * 60 * 1000);
 })();
 </script>
 </body>
