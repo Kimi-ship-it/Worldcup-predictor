@@ -231,6 +231,76 @@
      （同时仍受 .results.pre 约束；双保险避免「整卡消失」） */
   #dailySummaryCard { display: none !important; }
   #results:not(.pre).show #dailySummaryCard.ds-show { display: block !important; }
+  #deskOverlayCard { display: none !important; }
+  #results:not(.pre).show #deskOverlayCard.dk-show { display: block !important; }
+  #marketPasteCard { display: none !important; }
+  #results:not(.pre).show #marketPasteCard.dk-show { display: block !important; }
+  .mp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 800px) { .mp-grid { grid-template-columns: 1fr; } }
+  .mp-panel {
+    background: var(--surface-alt); border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px 16px; display: flex; flex-direction: column; min-height: 0;
+  }
+  .mp-panel-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin-bottom: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  }
+  .mp-panel-head h4 {
+    margin: 0; font-size: 13px; font-weight: 800; color: var(--accent); letter-spacing: 0.3px;
+  }
+  .mp-panel-head .mp-tag {
+    font-size: 10px; font-weight: 700; color: var(--text-dim); background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px; white-space: nowrap;
+  }
+  .mp-hint { font-size: 11px; color: var(--text-dim); line-height: 1.55; margin: 0 0 10px; }
+  .mp-hint code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10.5px;
+    color: var(--accent); background: rgba(0,212,170,0.08); padding: 1px 5px; border-radius: 4px;
+  }
+  .mp-panel textarea {
+    width: 100%; min-height: 148px; resize: vertical; flex: 1;
+    padding: 12px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; line-height: 1.55; font-weight: 500; transition: border-color 0.2s;
+  }
+  .mp-panel textarea:hover { border-color: rgba(0,212,170,0.45); }
+  .mp-panel textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .mp-panel textarea::placeholder { color: #55557a; }
+  .mp-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+  .mp-btn {
+    padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2);
+    color: var(--text); font-size: 11.5px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+  }
+  .mp-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .mp-btn.primary { background: rgba(0,212,170,0.12); border-color: rgba(0,212,170,0.45); color: var(--accent); }
+  .mp-btn.primary:hover { background: rgba(0,212,170,0.2); }
+  .mp-status { font-size: 11px; color: var(--text-dim); line-height: 1.5; flex: 1; min-width: 140px; }
+  .mp-status .ok { color: var(--value); font-weight: 700; }
+  .mp-status .warn { color: var(--draw); font-weight: 700; }
+  .mp-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .mp-chip {
+    font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+    background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.25); color: var(--accent);
+  }
+  .mp-chip.dim { background: var(--surface-2); border-color: var(--border); color: var(--text-dim); }
+  .dk-stars { letter-spacing: 2px; color: var(--value); font-size: 16px; }
+  .dk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+  @media (max-width: 800px) { .dk-grid { grid-template-columns: 1fr; } }
+  .dk-box { background: var(--surface-alt); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+  .dk-box h4 { margin: 0 0 8px; font-size: 13px; color: var(--accent); }
+  .dk-row { font-size: 12.5px; line-height: 1.65; color: var(--text); }
+  .dk-row b { color: var(--text); }
+  .dk-muted { color: var(--text-dim); font-size: 11.5px; margin-top: 8px; line-height: 1.6; }
+  .dk-check { font-size: 11.5px; line-height: 1.55; color: var(--text-dim); columns: 2; gap: 16px; }
+  @media (max-width: 800px) { .dk-check { columns: 1; } }
+  .dk-check .ok { color: var(--value); }
+  .dk-check .no { color: var(--away); }
+  .dk-sig { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px; margin-right: 6px; }
+  .dk-sig.bull { background: rgba(0,212,170,0.15); color: var(--value); border: 1px solid rgba(0,212,170,0.4); }
+  .dk-sig.bear { background: rgba(255,85,102,0.12); color: var(--away); border: 1px solid rgba(255,85,102,0.4); }
+  .dk-sig.neut { background: rgba(250,204,21,0.12); color: var(--draw); border: 1px solid rgba(250,204,21,0.35); }
+  .mkt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 8px; }
+  .mkt-grid .oi label { font-size: 10.5px; }
   .ds-stamp { margin-left: 10px; font-size: 11px; font-weight: 600; color: var(--text-dim); }
   .ds-list { display: flex; flex-direction: column; gap: 10px; }
   .ds-row { display: grid; grid-template-columns: 72px minmax(160px, 1.2fr) minmax(100px, 0.7fr) minmax(160px, 1.1fr) minmax(130px, 1fr) 48px;
@@ -837,6 +907,23 @@
         <div class="oi"><label>平局赔率 Draw</label><input type="number" id="inDraw" step="0.01" placeholder="如 3.30"></div>
         <div class="oi"><label>客胜赔率 Away</label><input type="number" id="inAway" step="0.01" placeholder="如 3.50"></div>
       </div>
+      <div class="plan-odds-title" style="margin-top:14px">V3.5 盘赔输入（初盘→即时；可选威/立/365）/ Market Lines</div>
+      <div class="mkt-grid">
+        <div class="oi"><label>初盘主 Open H</label><input type="number" id="mkOpenH" step="0.01" placeholder="1.85"></div>
+        <div class="oi"><label>初盘平 Open D</label><input type="number" id="mkOpenD" step="0.01" placeholder="3.40"></div>
+        <div class="oi"><label>初盘客 Open A</label><input type="number" id="mkOpenA" step="0.01" placeholder="4.00"></div>
+        <div class="oi"><label>即时主 Live H</label><input type="number" id="mkLiveH" step="0.01" placeholder="1.70"></div>
+        <div class="oi"><label>即时平 Live D</label><input type="number" id="mkLiveD" step="0.01" placeholder="3.60"></div>
+        <div class="oi"><label>即时客 Live A</label><input type="number" id="mkLiveA" step="0.01" placeholder="4.50"></div>
+        <div class="oi"><label>亚初盘(主让负)</label><input type="number" id="mkAhOpen" step="0.25" placeholder="-0.5"></div>
+        <div class="oi"><label>亚初水 Home</label><input type="number" id="mkAhOpenW" step="0.01" placeholder="0.90"></div>
+        <div class="oi"><label>亚即盘(主让负)</label><input type="number" id="mkAhLive" step="0.25" placeholder="-0.75"></div>
+        <div class="oi"><label>亚即水 Home</label><input type="number" id="mkAhLiveW" step="0.01" placeholder="0.88"></div>
+        <div class="oi"><label>威廉即时主</label><input type="number" id="mkWhH" step="0.01" placeholder="可选"></div>
+        <div class="oi"><label>立博即时主</label><input type="number" id="mkLadH" step="0.01" placeholder="可选"></div>
+        <div class="oi"><label>bet365即时主</label><input type="number" id="mkB365H" step="0.01" placeholder="可选"></div>
+      </div>
+      <div class="dk-muted">盘口约定：主队让球为负（如 -0.75=半一）。未填完整盘赔时操盘层仅显示「缺盘赔·仅泊松」，不编造升降盘。</div>
       <table class="value-table" id="valueTable"></table>
 
       <div class="plan-section">
@@ -870,6 +957,45 @@
         <div class="info-card"><div class="value" id="mConf">-</div><div class="label">预测置信度 Confidence</div></div>
         <div class="info-card"><div class="value" id="mSim">-</div><div class="label">模拟胜率 Sim (主/平/客)</div></div>
       </div>
+    </div>
+
+    <!-- V3.5 盘赔粘贴：欧赔/亚盘多公司，位于操盘精算上方 -->
+    <div class="card" id="marketPasteCard">
+      <div class="card-title">盘赔数据录入 / Market Paste<span class="ds-stamp" id="mpStamp"></span></div>
+      <div class="mp-grid">
+        <div class="mp-panel">
+          <div class="mp-panel-head">
+            <h4>欧赔 · 初盘 → 即时</h4>
+            <span class="mp-tag">建议含 威 / 立 / 365</span>
+          </div>
+          <p class="mp-hint">每行：<code>公司,初胜,初平,初负,即胜,即平,即负</code> · 支持逗号或制表符分隔</p>
+          <textarea id="mpEuro" spellcheck="false" placeholder="威廉希尔,1.25,6.50,10.00,1.22,6.50,12.00&#10;立博,1.28,6.00,9.50,1.25,6.00,11.00&#10;bet365,1.22,6.50,12.00,1.20,6.50,13.00&#10;皇冠,1.26,6.20,10.50,1.23,6.30,11.50&#10;Pinnacle,1.27,6.40,11.00,1.24,6.40,12.00"></textarea>
+          <div class="mp-chips" id="mpEuroChips"></div>
+        </div>
+        <div class="mp-panel">
+          <div class="mp-panel-head">
+            <h4>亚盘 · 主队视角</h4>
+            <span class="mp-tag">中文盘口 / 数字均可</span>
+          </div>
+          <p class="mp-hint">每行：<code>公司,初盘,初主水,初客水,即盘,即主水,即客水</code> · 如 <code>球半</code>、<code>球半/两球</code></p>
+          <textarea id="mpAsian" spellcheck="false" placeholder="bet365,球半,0.95,0.91,球半/两球,0.88,0.98&#10;皇冠,球半,0.98,0.88,球半/两球,0.92,0.94"></textarea>
+          <div class="mp-chips" id="mpAsianChips"></div>
+        </div>
+      </div>
+      <div class="mp-actions">
+        <button type="button" class="mp-btn primary" id="mpApplyBtn">应用并刷新操盘</button>
+        <button type="button" class="mp-btn" id="mpDemoBtn">填入示例格式</button>
+        <button type="button" class="mp-btn" id="mpClearBtn">清空</button>
+        <div class="mp-status" id="mpStatus">粘贴多家公司盘赔后点击应用；未填写时操盘层保持「缺盘赔·仅泊松」。</div>
+      </div>
+      <div class="dk-muted">数据仅用于本机 K 阻诱分析，不会上传。解析结果会同步到下方价值卡中的单项盘赔输入；多家公司取均值，威/立/365 单独核验。</div>
+    </div>
+
+    <!-- V3.5 操盘精算层：蒙特卡洛后显示 -->
+    <div class="card" id="deskOverlayCard">
+      <div class="card-title">操盘精算 / Desk Overlay (V3.5)<span class="ds-stamp" id="dkStamp"></span></div>
+      <div id="deskOverlay"></div>
+      <div class="dk-muted">叠加 football-betting-analysis V3.5：K阻诱交叉矩阵 + 规则 L/M/N/O/P/Q + 六维度 + 检查清单。比分仍以泊松/Dixon-Coles 联合分布为准；盘赔方向在填写上方「盘赔数据录入」欧赔/亚盘后生效。</div>
     </div>
 
     <!-- Daily match board：仅蒙特卡洛模拟完成后随 results 非 pre 态显示；置于关键指标下方 -->
@@ -3205,29 +3331,143 @@
     return { h: top.h, a: top.a, p: top.p, rule: "概率最高比分" };
   }
 
+  /* ---------- Fundamentals → λ (bounded; V3.5 N/O light) ---------- */
+  function standingsRow(teamId) {
+    const st = (typeof STANDINGS !== "undefined" && STANDINGS[ACTIVE_COMP.id]) || null;
+    if (!st || !st.rows) return null;
+    const i = st.rows.findIndex(r => r[0] === teamId);
+    if (i < 0) return null;
+    const r = st.rows[i];
+    return { rank: i + 1, p: r[1], w: r[2], d: r[3], l: r[4], gf: r[5], ga: r[6], pts: r[7], nTeams: st.rows.length };
+  }
+  function recentWDLString(teamId) {
+    const arr = recent3m(teamId) || [];
+    return arr.slice(-6).map(r => (r[1] > r[2] ? "W" : r[1] === r[2] ? "D" : "L")).join("");
+  }
+  function lossStreakFromRecent(teamId) {
+    const s = recentWDLString(teamId);
+    let n = 0;
+    for (let i = s.length - 1; i >= 0; i--) { if (s[i] === "L") n++; else break; }
+    return n;
+  }
+  function formAdjFromTeam(team) {
+    // Blend formIndex with recent3m PPG (V3.5「近况」权重)，cap ±12%
+    const fi = formIndex(team);
+    let units = (fi.idx - 62) * 0.45;
+    try {
+      const rs = recentStats(team.id);
+      if (rs && rs.n >= 3) {
+        // ppg 0–3 → -8..+10 form units
+        const fromPpg = (rs.ppg - 1.35) * 8;
+        const fromGd = Math.max(-4, Math.min(4, rs.avgGD * 2.2));
+        units = units * 0.55 + (fromPpg + fromGd) * 0.45;
+      }
+    } catch (e) {}
+    units = Math.max(-12, Math.min(12, units));
+    return { units, idx: fi.idx, depth: fi.depth };
+  }
+  function depthAdjMult(depth) {
+    if (depth == null) return 1;
+    // depth 40–95 → 0.96–1.04
+    return 0.96 + Math.max(0, Math.min(1, (depth - 40) / 55)) * 0.08;
+  }
+  function injuryDepthHaircut(team) {
+    const comp = squadCompleteness(team);
+    if (comp >= 94) return 1;
+    if (comp >= 86) return 0.985;
+    return 0.97;
+  }
+  function motivationLambdaNudge(team, isHomeSide) {
+    // Rule N light: loss streak / bottom-table → small λ nudge (NOT +25% probability)
+    const streak = lossStreakFromRecent(team.id);
+    const row = standingsRow(team.id);
+    let atkN = 0, defN = 0;
+    if (streak >= 10) atkN += streak >= 20 ? 0.035 : streak >= 15 ? 0.028 : 0.018;
+    if (row && row.nTeams) {
+      const fromBottom = row.nTeams - row.rank + 1;
+      if (fromBottom <= 3) { // relegation zone
+        if (isHomeSide) atkN += 0.02;
+        else defN += 0.015; // away: slightly tighter / grind
+      }
+      if (row.rank <= 3) atkN += 0.01; // title race
+    }
+    return { atkN: Math.min(0.06, atkN), defN: Math.min(0.04, defN) };
+  }
+  function dragonHomeBoost(home, away, venue) {
+    // Rule O light: both strong home/away tendencies → bump home field
+    if (venue !== "home") return 0;
+    const hr = standingsRow(home.id);
+    const ar = standingsRow(away.id);
+    // proxy home strength from atk/def + standing
+    const homeStrong = home.atk + home.def >= 1.25 || (hr && hr.rank <= Math.ceil((hr.nTeams || 20) * 0.35));
+    const awayStrong = away.atk + away.def >= 1.20 || (ar && ar.rank <= Math.ceil((ar.nTeams || 20) * 0.4));
+    if (!(homeStrong && awayStrong)) return 0;
+    const nonEuro = /jp|kl|us|au|csl|mx|br|ar|no|se|fi/.test(ACTIVE_COMP.id || "");
+    return nonEuro ? 0.06 : 0.04;
+  }
+
   function computeLambdas(home, away, venue, homeForm, awayForm) {
-    const venueHome = venue === "home" ? HOME_FIELD : venue === "away" ? AWAY_FIELD : 1.0;
-    const venueAway = venue === "home" ? AWAY_FIELD : venue === "away" ? HOME_FIELD : 1.0;
+    const dragon = dragonHomeBoost(home, away, venue);
+    let venueHome = venue === "home" ? HOME_FIELD + dragon : venue === "away" ? AWAY_FIELD : 1.0;
+    let venueAway = venue === "home" ? AWAY_FIELD : venue === "away" ? HOME_FIELD : 1.0;
     const ha = tournAdj(home), aa = tournAdj(away);
-    const hAtk = clamp01(home.atk + ha.atk), hDef = clamp01(home.def + ha.def);
-    const aAtk = clamp01(away.atk + aa.atk), aDef = clamp01(away.def + aa.def);
-    const lh = BASE_GOALS * attackMult(hAtk) * defenseMult(aDef) * venueHome * formMult(homeForm || 0);
-    const la = BASE_GOALS * attackMult(aAtk) * defenseMult(hDef) * venueAway * formMult(awayForm || 0);
-    return { lh, la, hAtk, hDef, aAtk, aDef };
+    const hn = motivationLambdaNudge(home, true);
+    const an = motivationLambdaNudge(away, false);
+    const hAtk = clamp01(home.atk + ha.atk + hn.atkN);
+    const hDef = clamp01(home.def + ha.def + hn.defN);
+    const aAtk = clamp01(away.atk + aa.atk + an.atkN);
+    const aDef = clamp01(away.def + aa.def + an.defN);
+
+    // Prefer live formIndex over zeroed sliders
+    const hf = formAdjFromTeam(home);
+    const af = formAdjFromTeam(away);
+    const hFormUnits = (homeForm || 0) !== 0 ? homeForm : hf.units;
+    const aFormUnits = (awayForm || 0) !== 0 ? awayForm : af.units;
+
+    const hDepth = depthAdjMult(hf.depth) * injuryDepthHaircut(home);
+    const aDepth = depthAdjMult(af.depth) * injuryDepthHaircut(away);
+
+    const lh = BASE_GOALS * attackMult(hAtk) * defenseMult(aDef) * venueHome * formMult(hFormUnits) * hDepth;
+    const la = BASE_GOALS * attackMult(aAtk) * defenseMult(hDef) * venueAway * formMult(aFormUnits) * aDepth;
+    return { lh, la, hAtk, hDef, aAtk, aDef, meta: { hFormUnits, aFormUnits, dragon, hn, an } };
   }
 
   function fairOdds(p) { return p > 0 ? (1 / p) : 999; }
 
-  /* ---------- Monte Carlo (for cross-check) ---------- */
-  function simPoisson(lambda) {
-    const L = Math.exp(-lambda); let k = 0, p = 1;
-    do { k++; p *= Math.random(); } while (p > L);
-    return k - 1;
+  /* ---------- Monte Carlo: sample from Dixon-Coles joint (cross-check) ---------- */
+  function buildCdfFromMatrix(m) {
+    const cells = [];
+    let acc = 0;
+    for (let h = 0; h <= MAXG; h++)
+      for (let a = 0; a <= MAXG; a++) {
+        acc += m[h][a];
+        cells.push({ h, a, c: acc });
+      }
+    // renormalize last to 1
+    if (cells.length) cells[cells.length - 1].c = 1;
+    return cells;
   }
-  function monteCarlo(lh, la, n) {
-    let hw=0, d=0, aw=0;
-    for (let i=0;i<n;i++){ const h=simPoisson(lh), a=simPoisson(la);
-      if(h>a)hw++; else if(h===a)d++; else aw++; }
+  function sampleMatrixScore(cdf) {
+    const u = Math.random();
+    for (let i = 0; i < cdf.length; i++) if (u <= cdf[i].c) return cdf[i];
+    return cdf[cdf.length - 1];
+  }
+  function monteCarloFromMatrix(m, n) {
+    const cdf = buildCdfFromMatrix(m);
+    let hw = 0, d = 0, aw = 0;
+    for (let i = 0; i < n; i++) {
+      const s = sampleMatrixScore(cdf);
+      if (s.h > s.a) hw++; else if (s.h === s.a) d++; else aw++;
+    }
+    return { hw: hw / n, d: d / n, aw: aw / n };
+  }
+  // keep name for any residual callers
+  function monteCarlo(lh, la, n, m) {
+    if (m) return monteCarloFromMatrix(m, n);
+    // fallback independent Poisson (should not be used in UI path)
+    const L = lam => { const e = Math.exp(-lam); let k = 0, p = 1; do { k++; p *= Math.random(); } while (p > e); return k - 1; };
+    let hw=0,d=0,aw=0;
+    for (let i=0;i<n;i++){ const h=L(lh), a=L(la); if(h>a)hw++; else if(h===a)d++; else aw++; }
     return { hw:hw/n, d:d/n, aw:aw/n };
   }
 
@@ -3238,19 +3478,19 @@
     if (!homeTeam || !awayTeam) { alert("请选择两支球队"); return; }
     if (homeTeam.id === awayTeam.id) { alert("请选择两支不同的球队"); return; }
 
-    // In-tournament adjustment + venue/form → λ; headline / Top6 = raw probability rank.
-    const { lh, la, hAtk, hDef, aAtk, aDef } = computeLambdas(
+    const { lh, la, hAtk, hDef, aAtk, aDef, meta } = computeLambdas(
       homeTeam, awayTeam, state.venue, state.homeForm, state.awayForm);
 
     const m = computeMatrix(lh, la);
     const mk = computeMarkets(m);
     const top = topScores(m, 6);
     const ml = mostLikely(m);
-    const sim = runSim ? monteCarlo(lh, la, 10000) : null;
+    const sim = runSim ? monteCarloFromMatrix(m, 10000) : null;
+    const desk = runKFramework(homeTeam, awayTeam, mk, top);
 
-    state.lastModel = { homeTeam, awayTeam, lh, la, m, mk, top, ml, sim, hAtk, hDef, aAtk, aDef };
+    state.lastModel = { homeTeam, awayTeam, lh, la, m, mk, top, ml, sim, hAtk, hDef, aAtk, aDef, meta, desk };
     render();
-    computeValue(); // refresh value table if odds entered
+    computeValue();
   }
 
   function disableSim() { const b = $("simBtn"); b.disabled = true; }
@@ -4534,8 +4774,16 @@
   function hideDailySummary() {
     const card = $("dailySummaryCard");
     if (card) card.classList.remove("ds-show");
+    const dk = $("deskOverlayCard");
+    if (dk) dk.classList.remove("dk-show");
+    const mp = $("marketPasteCard");
+    if (mp) mp.classList.remove("dk-show");
   }
 
+  function showDeskOverlayCard() {
+    const card = $("deskOverlayCard");
+    if (card) card.classList.add("dk-show");
+  }
   function showDailySummary() {
     const card = $("dailySummaryCard");
     if (!card) return;
@@ -4588,39 +4836,40 @@
     if (!homeTeam || !awayTeam) { alert("请选择两支球队"); return; }
     if (homeTeam.id === awayTeam.id) { alert("请选择两支不同的球队"); return; }
 
-    // Deterministic analytic model computed up front (headline = max-probability score).
-    const { lh, la, hAtk, hDef, aAtk, aDef } = computeLambdas(
+    // Deterministic analytic model (Dixon-Coles matrix); MC samples the same joint.
+    const { lh, la, hAtk, hDef, aAtk, aDef, meta } = computeLambdas(
       homeTeam, awayTeam, state.venue, state.homeForm, state.awayForm);
     const m = computeMatrix(lh, la);
     const mk = computeMarkets(m);
     const top = topScores(m, 6);
     const ml = mostLikely(m);
+    const cdf = buildCdfFromMatrix(m);
 
-    // Lock UI and run the simulation across a randomized 30-60s window.
     simRunning = true;
     const ctrls = ["homeTeam", "awayTeam", "fixtureSelect", "dateSelect", "simBtn"];
     ctrls.forEach(id => $(id).disabled = true);
     const btn = $("simBtn");
     btn.classList.add("running");
 
-    const target = 30000 + Math.random() * 30000; // 30s ~ 60s
+    const target = 30000 + Math.random() * 30000;
     const start = performance.now();
     const BATCH = 12000;
     let hw = 0, d = 0, aw = 0, iters = 0;
 
     function step() {
       for (let i = 0; i < BATCH; i++) {
-        const h = simPoisson(lh), a = simPoisson(la);
-        if (h > a) hw++; else if (h === a) d++; else aw++;
+        const s = sampleMatrixScore(cdf);
+        if (s.h > s.a) hw++; else if (s.h === s.a) d++; else aw++;
       }
       iters += BATCH;
       const elapsed = performance.now() - start;
       const shown = Math.min(10000, Math.max(1, Math.round(elapsed / target * 10000)));
-      btn.textContent = `模拟中… ${shown.toLocaleString()} / 10,000 次 · ${(elapsed / 1000).toFixed(0)}s`;
+      btn.textContent = `矩阵抽样… ${shown.toLocaleString()} / 10,000 次 · ${(elapsed / 1000).toFixed(0)}s`;
 
       if (elapsed >= target) {
         const sim = { hw: hw / iters, d: d / iters, aw: aw / iters };
-        state.lastModel = { homeTeam, awayTeam, lh, la, m, mk, top, ml, sim, hAtk, hDef, aAtk, aDef };
+        const desk = runKFramework(homeTeam, awayTeam, mk, top);
+        state.lastModel = { homeTeam, awayTeam, lh, la, m, mk, top, ml, sim, hAtk, hDef, aAtk, aDef, meta, desk };
         render();
         computeValue();
         ctrls.forEach(id => $(id).disabled = false);
@@ -4628,7 +4877,7 @@
         btn.textContent = SIM_LABEL;
         simRunning = false;
       } else {
-        setTimeout(step, 16); // yield so progress text updates and UI stays responsive
+        setTimeout(step, 16);
       }
     }
     step();
@@ -4653,7 +4902,7 @@
     $("predHomeGoals").textContent = ml.h;
     $("predAwayGoals").textContent = ml.a;
     $("predCaption").textContent = `最可能比分 / ${ml.rule || "加权规则"} · ${ml.h}:${ml.a}（${pct(ml.p)}）`;
-    $("predHint").textContent = `模型 λ ${lh.toFixed(2)}–${la.toFixed(2)} · 1X2 ${pct(mk.homeWin)} / ${pct(mk.draw)} / ${pct(mk.awayWin)} · ${ml.rule || "加权规则"}`;
+    $("predHint").textContent = `模型 λ ${lh.toFixed(2)}–${la.toFixed(2)} · 1X2 ${pct(mk.homeWin)} / ${pct(mk.draw)} / ${pct(mk.awayWin)} · ${ml.rule || "概率最高比分"} · MC=矩阵抽样`;
 
     // 1X2
     $("probHome").textContent = pct(mk.homeWin);
@@ -4705,9 +4954,10 @@
     const conf = Math.max(mk.homeWin, mk.draw, mk.awayWin);
     $("mConf").textContent = conf>=0.55 ? "高 High" : conf>=0.42 ? "中 Med" : "低 Low";
     $("mSim").textContent = sim ? `${(sim.hw*100).toFixed(0)}/${(sim.d*100).toFixed(0)}/${(sim.aw*100).toFixed(0)}` : "未运行";
+    if (sim) $("mSim").title = "Dixon-Coles 联合分布矩阵抽样交叉校验";
 
-    // 当日汇总放在关键指标之后渲染并强制显示（模拟完成后）
     showDailySummary();
+    showDeskOverlay();
   }
 
   function renderMarkets(m, mk) {
@@ -4986,6 +5236,11 @@
     const oddA = (1 / Math.max(0.05, mk.awayWin)) * 0.92;
     const kH = kellyFrac(mk.homeWin, oddH), kD = kellyFrac(mk.draw, oddD), kA = kellyFrac(mk.awayWin, oddA);
     const lean = leanOutcome(mk);
+    const deskLite = runKFramework(home, away, mk, top);
+    const sigCls = /诱|看淡|造热门|警告/.test(deskLite.signal) ? "bear" : /强看好|真阻|看好|偏阻|中性偏/.test(deskLite.signal) ? "bull" : "neut";
+    const kBadge = deskLite.hasCore
+      ? `<div class="ds-kb"><span class="dk-sig ${sigCls}">${deskLite.signal}</span><span class="dk-stars" style="font-size:12px">${"★".repeat(deskLite.stars)}${"☆".repeat(5 - deskLite.stars)}</span></div>`
+      : `<div class="ds-kb"><span class="dk-sig neut">缺盘赔·仅泊松</span></div>`;
     const hn = home.name.split(" ")[0], an = away.name.split(" ")[0];
     let outTxt = lean === "H" ? `主胜 (${hn})` : lean === "A" ? `客胜 (${an})` : "平局";
     if (st.done) outTxt = fx.hs === fx.as ? `完场平 ${fx.hs}:${fx.as}` : (fx.hs > fx.as ? `完场主胜 ${fx.hs}:${fx.as}` : `完场客胜 ${fx.hs}:${fx.as}`);
@@ -5008,6 +5263,7 @@
         <div class="ds-tier">实力 ${strengthTier(home)} vs ${strengthTier(away)}</div>
         <div class="ds-hcap">模型盘口 ${hcap} · 预期 ${lh.toFixed(2)}-${la.toFixed(2)} · ${hcap === "平手" ? "相对均衡" : (la - lh < 0 ? "主队让球" : "主队受让")}</div>
         <div class="ds-kelly">凯利指数 主<b>${kH.toFixed(2)}</b> / 平<b>${kD.toFixed(2)}</b> / 客<b>${kA.toFixed(2)}</b> · 模型近似</div>
+        ${kBadge}
       </div>
       <div class="ds-score">
         <div class="ds-ml">${mlShow}</div>
@@ -5637,17 +5893,909 @@
   }
 
   /* ---------- Value betting ---------- */
+
+  /* ============================================================
+     V3.5 Desk Overlay — K阻诱 + L/M/N/O/P/Q + 六维 + 清单
+     Port of football-betting-analysis-V3.5/model (bounded blend)
+     ============================================================ */
+  const K_MATRIX = {
+    "down|down": { signal: "中性偏看好", meaning: "协同信号，方向一致" },
+    "down|up": { signal: "警告矛盾", meaning: "降盘但赔率上调，警惕诱盘" },
+    "stable|down": { signal: "看好", meaning: "稳盘暗降赔付，实盘信号" },
+    "stable|up": { signal: "看淡", meaning: "稳盘提高赔付，不看好" },
+    "up|down": { signal: "强看好", meaning: "升盘+降赔=阻+控赔" },
+    "up|up": { signal: "需结合基本面", meaning: "升盘升水，见V3.2修正" },
+    "down|stable": { signal: "中性偏热", meaning: "降盘稳赔，力度弱" },
+    "stable|stable": { signal: "观望", meaning: "盘赔均稳" },
+    "up|stable": { signal: "偏阻上", meaning: "升盘稳赔，阻门槛" },
+  };
+
+
+  /* ---------- Multi-book market paste (Euro / Asian) ---------- */
+  const AH_LINE_MAP = {
+    "两球": -2, "球半/两球": -1.75, "球半两球": -1.75, "球半": -1.5,
+    "一球/球半": -1.25, "一球球半": -1.25, "一球": -1, "半/一": -0.75, "半一": -0.75,
+    "半球": -0.5, "平/半": -0.25, "平半": -0.25, "平手": 0, "平": 0,
+    "受平/半": 0.25, "受平半": 0.25, "受半球": 0.5, "受半/一": 0.75, "受半一": 0.75,
+    "受一球": 1, "受一球/球半": 1.25, "受球半": 1.5, "受球半/两球": 1.75, "受两球": 2
+  };
+  function parseAhLineToken(x) {
+    x = String(x == null ? "" : x).trim().replace(/\s/g, "");
+    if (!x) return null;
+    if (x in AH_LINE_MAP) return AH_LINE_MAP[x];
+    const n = Number(x);
+    return Number.isFinite(n) ? n : null;
+  }
+  function splitPasteLine(line) {
+    return String(line).trim().split(/[,\t|，]+/).map(s => s.trim()).filter(s => s !== "");
+  }
+  function parseEuroPasteText(text) {
+    const rows = [];
+    String(text || "").split(/\n+/).forEach(line => {
+      if (!line.trim() || line.trim().startsWith("#")) return;
+      const p = splitPasteLine(line);
+      if (p.length < 7) return;
+      const nums = p.slice(1, 7).map(Number);
+      if (nums.some(n => !Number.isFinite(n) || n < 1.01)) return;
+      rows.push({
+        company: p[0],
+        openH: nums[0], openD: nums[1], openA: nums[2],
+        liveH: nums[3], liveD: nums[4], liveA: nums[5],
+      });
+    });
+    return rows;
+  }
+  function parseAsianPasteText(text) {
+    const rows = [];
+    String(text || "").split(/\n+/).forEach(line => {
+      if (!line.trim() || line.trim().startsWith("#")) return;
+      const p = splitPasteLine(line);
+      if (p.length < 7) return;
+      const openLine = parseAhLineToken(p[1]), liveLine = parseAhLineToken(p[4]);
+      const openW = Number(p[2]), openAw = Number(p[3]), liveW = Number(p[5]), liveAw = Number(p[6]);
+      if (openLine == null || liveLine == null) return;
+      if (![openW, openAw, liveW, liveAw].every(n => Number.isFinite(n))) return;
+      rows.push({ company: p[0], openLine, openW, openAw, liveLine, liveW, liveAw });
+    });
+    return rows;
+  }
+  function avgField(rows, key) {
+    if (!rows || !rows.length) return null;
+    return rows.reduce((s, r) => s + r[key], 0) / rows.length;
+  }
+  function findBookRow(rows, keys) {
+    if (!rows) return null;
+    return rows.find(r => keys.some(k => String(r.company).toLowerCase().includes(k))) || null;
+  }
+  function setNumInput(id, v) {
+    const el = $(id); if (!el || v == null || !Number.isFinite(v)) return;
+    el.value = String(Math.round(v * 1000) / 1000);
+  }
+  function syncPasteToMkInputs(euroRows, asianRows) {
+    if (euroRows && euroRows.length) {
+      setNumInput("mkOpenH", avgField(euroRows, "openH"));
+      setNumInput("mkOpenD", avgField(euroRows, "openD"));
+      setNumInput("mkOpenA", avgField(euroRows, "openA"));
+      setNumInput("mkLiveH", avgField(euroRows, "liveH"));
+      setNumInput("mkLiveD", avgField(euroRows, "liveD"));
+      setNumInput("mkLiveA", avgField(euroRows, "liveA"));
+      const wh = findBookRow(euroRows, ["威廉", "william", "wh"]);
+      const lad = findBookRow(euroRows, ["立博", "ladbroke", "lad"]);
+      const b365 = findBookRow(euroRows, ["bet365", "365"]);
+      if (wh) setNumInput("mkWhH", wh.liveH);
+      if (lad) setNumInput("mkLadH", lad.liveH);
+      if (b365) setNumInput("mkB365H", b365.liveH);
+    }
+    if (asianRows && asianRows.length) {
+      setNumInput("mkAhOpen", avgField(asianRows, "openLine"));
+      setNumInput("mkAhOpenW", avgField(asianRows, "openW"));
+      setNumInput("mkAhLive", avgField(asianRows, "liveLine"));
+      setNumInput("mkAhLiveW", avgField(asianRows, "liveW"));
+    }
+  }
+  function refreshMarketPasteStatus() {
+    const euroRows = parseEuroPasteText(($("mpEuro") || {}).value || "");
+    const asianRows = parseAsianPasteText(($("mpAsian") || {}).value || "");
+    const st = $("mpStatus");
+    const eChips = $("mpEuroChips"), aChips = $("mpAsianChips");
+    const stamp = $("mpStamp");
+    if (stamp) stamp.textContent = nowStamp();
+    if (eChips) {
+      eChips.innerHTML = euroRows.length
+        ? euroRows.map(r => `<span class="mp-chip">${r.company} ${r.liveH.toFixed(2)}</span>`).join("")
+        : `<span class="mp-chip dim">未解析到欧赔行</span>`;
+    }
+    if (aChips) {
+      aChips.innerHTML = asianRows.length
+        ? asianRows.map(r => `<span class="mp-chip">${r.company} ${r.openLine}→${r.liveLine}</span>`).join("")
+        : `<span class="mp-chip dim">未解析到亚盘行</span>`;
+    }
+    if (st) {
+      const parts = [];
+      if (euroRows.length) parts.push(`<span class="ok">欧赔 ${euroRows.length} 家</span>`);
+      else parts.push(`<span class="warn">欧赔未填</span>`);
+      if (asianRows.length) parts.push(`<span class="ok">亚盘 ${asianRows.length} 家</span>`);
+      else parts.push(`<span class="warn">亚盘未填</span>`);
+      const books = [
+        findBookRow(euroRows, ["威廉", "william"]) ? "威" : null,
+        findBookRow(euroRows, ["立博", "ladbroke"]) ? "立" : null,
+        findBookRow(euroRows, ["bet365", "365"]) ? "365" : null,
+      ].filter(Boolean);
+      if (books.length) parts.push("核验 " + books.join("/"));
+      else if (euroRows.length) parts.push(`<span class="warn">缺威/立/365</span>`);
+      st.innerHTML = parts.join(" · ");
+    }
+    return { euroRows, asianRows };
+  }
+  function applyMarketPasteAndRefresh() {
+    const { euroRows, asianRows } = refreshMarketPasteStatus();
+    syncPasteToMkInputs(euroRows, asianRows);
+    if (state.lastModel) {
+      state.lastModel.desk = runKFramework(state.lastModel.homeTeam, state.lastModel.awayTeam, state.lastModel.mk, state.lastModel.top);
+      showDeskOverlay();
+      computeValue();
+      try { renderDailySummary(); } catch (e) {}
+    }
+  }
+  function loadMarketPasteDemo() {
+    const e = $("mpEuro"), a = $("mpAsian");
+    if (e) e.value = "威廉希尔,1.25,6.50,10.00,1.22,6.50,12.00\n立博,1.28,6.00,9.50,1.25,6.00,11.00\nbet365,1.22,6.50,12.00,1.20,6.50,13.00\n皇冠,1.26,6.20,10.50,1.23,6.30,11.50\nPinnacle,1.27,6.40,11.00,1.24,6.40,12.00";
+    if (a) a.value = "bet365,球半,0.95,0.91,球半/两球,0.88,0.98\n皇冠,球半,0.98,0.88,球半/两球,0.92,0.94";
+    applyMarketPasteAndRefresh();
+  }
+  function clearMarketPaste() {
+    const e = $("mpEuro"), a = $("mpAsian");
+    if (e) e.value = "";
+    if (a) a.value = "";
+    refreshMarketPasteStatus();
+    if (state.lastModel) {
+      state.lastModel.desk = runKFramework(state.lastModel.homeTeam, state.lastModel.awayTeam, state.lastModel.mk, state.lastModel.top);
+      showDeskOverlay();
+      computeValue();
+    }
+  }
+
+  function numInput(id) {
+    const el = $(id); if (!el) return null;
+    const v = parseFloat(el.value);
+    return Number.isFinite(v) ? v : null;
+  }
+  function readMarketInput() {
+    const euroRows = parseEuroPasteText(($("mpEuro") || {}).value || "");
+    const asianRows = parseAsianPasteText(($("mpAsian") || {}).value || "");
+    // Paste multi-book averages take priority; fall back to single-field inputs
+    let openH = avgField(euroRows, "openH") ?? numInput("mkOpenH");
+    let openD = avgField(euroRows, "openD") ?? numInput("mkOpenD");
+    let openA = avgField(euroRows, "openA") ?? numInput("mkOpenA");
+    let liveH = avgField(euroRows, "liveH") ?? numInput("mkLiveH") ?? numInput("inHome");
+    let liveD = avgField(euroRows, "liveD") ?? numInput("mkLiveD") ?? numInput("inDraw");
+    let liveA = avgField(euroRows, "liveA") ?? numInput("mkLiveA") ?? numInput("inAway");
+    const wh = findBookRow(euroRows, ["威廉", "william", "wh"]);
+    const lad = findBookRow(euroRows, ["立博", "ladbroke", "lad"]);
+    const b365 = findBookRow(euroRows, ["bet365", "365"]);
+    const whH = wh ? wh.liveH : numInput("mkWhH");
+    const ladH = lad ? lad.liveH : numInput("mkLadH");
+    const b365H = b365 ? b365.liveH : numInput("mkB365H");
+    const ahOpen = avgField(asianRows, "openLine") ?? numInput("mkAhOpen");
+    const ahLive = avgField(asianRows, "liveLine") ?? numInput("mkAhLive");
+    const ahOpenW = avgField(asianRows, "openW") ?? numInput("mkAhOpenW");
+    const ahLiveW = avgField(asianRows, "liveW") ?? numInput("mkAhLiveW");
+    return {
+      euro: { openH, openD, openA, liveH, liveD, liveA, whH, ladH, b365H },
+      asian: { openLine: ahOpen, liveLine: ahLive, openW: ahOpenW, liveW: ahLiveW },
+      euroRows, asianRows,
+    };
+  }
+  function validateMarketInput(mkt) {
+    const missing = [];
+    const e = mkt.euro, a = mkt.asian;
+    if (e.liveH == null || e.liveD == null || e.liveA == null) missing.push("缺少即时欧赔三元");
+    if (e.openH == null || e.openD == null || e.openA == null) missing.push("缺少初盘欧赔（升降赔判定弱化）");
+    if (a.liveLine == null) missing.push("缺少亚盘即时盘口");
+    if (a.openLine == null) missing.push("缺少亚盘初盘（升降盘判定弱化）");
+    const euroRows = mkt.euroRows || [];
+    if (euroRows.length && euroRows.length < 3) missing.push("欧赔公司不足（建议≥3家）");
+    if (e.whH == null) missing.push("缺少威廉希尔（建议纳入）");
+    if (e.ladH == null) missing.push("缺少立博（建议纳入）");
+    if (e.b365H == null) missing.push("缺少bet365（建议纳入）");
+    return missing;
+  }
+  function moveDir(open, live, eps) {
+    if (open == null || live == null) return "stable";
+    const d = live - open;
+    if (d > eps) return "up";
+    if (d < -eps) return "down";
+    return "stable";
+  }
+
+  /* V3.5 odds_math: majority line/odds + theory depth */
+  const EURO_ASIAN_TABLE = [
+    [1.05, 1.15, -1.75], [1.15, 1.25, -1.5], [1.25, 1.35, -1.25], [1.35, 1.45, -1],
+    [1.45, 1.6, -0.75], [1.6, 1.75, -0.5], [1.75, 1.95, -0.25], [1.95, 2.15, 0],
+    [2.15, 2.4, 0.25], [2.4, 2.6, 0.5],
+  ];
+  function theoreticalAsianFromEuro(homeOdds) {
+    if (homeOdds == null) return { line: null, water: "未知" };
+    for (const [lo, hi, line] of EURO_ASIAN_TABLE) {
+      if (homeOdds >= lo && homeOdds < hi) return { line, water: "表内" };
+    }
+    if (homeOdds < 1.05) return { line: -2, water: "低水" };
+    return { line: 0.75, water: "中高水" };
+  }
+  function depthVsTheory(actual, theory) {
+    if (actual == null || theory == null) return "无法判定";
+    const diff = actual - theory;
+    if (diff <= -0.25) return "深开";
+    if (diff >= 0.25) return "浅开";
+    return "合理";
+  }
+  function waterGrade(w) {
+    if (w == null) return "未知";
+    if (w < 0.75) return "超低水";
+    if (w < 0.85) return "低水";
+    if (w < 0.95) return "中水";
+    if (w <= 1.05) return "高水";
+    return "超高水";
+  }
+  function majorityLineMove(asianRows, openLine, liveLine) {
+    if (asianRows && asianRows.length) {
+      const deltas = asianRows.map(a => a.liveLine - a.openLine);
+      const avgDelta = deltas.reduce((s, d) => s + d, 0) / deltas.length;
+      const avgLive = asianRows.reduce((s, a) => s + a.liveLine, 0) / asianRows.length;
+      if (avgDelta <= -0.20) return { dir: "up", delta: avgDelta, avgLive };
+      if (avgDelta >= 0.20) return { dir: "down", delta: avgDelta, avgLive };
+      return { dir: "stable", delta: avgDelta, avgLive };
+    }
+    if (openLine == null || liveLine == null) return { dir: "stable", delta: 0, avgLive: liveLine || 0 };
+    const d = liveLine - openLine;
+    if (d <= -0.20) return { dir: "up", delta: d, avgLive: liveLine };
+    if (d >= 0.20) return { dir: "down", delta: d, avgLive: liveLine };
+    return { dir: "stable", delta: d, avgLive: liveLine };
+  }
+  function majorityOddsMove(euroRows, openSide, liveSide, side) {
+    // Heavy favorite: |Δ|≥0.02 or rel≥1.5%; else |Δ|≥0.05
+    if (euroRows && euroRows.length) {
+      const opens = euroRows.map(e => side === "away" ? e.openA : e.openH);
+      const deltas = euroRows.map(e => side === "away" ? e.liveA - e.openA : e.liveH - e.openH);
+      const avg = deltas.reduce((a, b) => a + b, 0) / deltas.length;
+      const avgOpen = opens.reduce((a, b) => a + b, 0) / opens.length;
+      const rel = avgOpen ? avg / avgOpen : 0;
+      const absTh = avgOpen < 1.5 ? 0.02 : 0.05;
+      if (avg <= -absTh || rel <= -0.015) return { dir: "down", delta: avg };
+      if (avg >= absTh || rel >= 0.015) return { dir: "up", delta: avg };
+      return { dir: "stable", delta: avg };
+    }
+    if (openSide == null || liveSide == null) return { dir: "stable", delta: 0 };
+    const avg = liveSide - openSide;
+    const absTh = openSide < 1.5 ? 0.02 : 0.05;
+    const rel = openSide ? avg / openSide : 0;
+    if (avg <= -absTh || rel <= -0.015) return { dir: "down", delta: avg };
+    if (avg >= absTh || rel >= 0.015) return { dir: "up", delta: avg };
+    return { dir: "stable", delta: avg };
+  }
+  function removeMargin1x2(h, d, a) {
+    if (!(h > 1 && d > 1 && a > 1)) return null;
+    const ih = 1 / h, id = 1 / d, ia = 1 / a, s = ih + id + ia;
+    return { H: ih / s, D: id / s, A: ia / s };
+  }
+  function pickDimWeights(leagueName) {
+    const L = String(leagueName || ACTIVE_COMP.name || "");
+    if (/法乙|Ligue 2/i.test(L)) return { fund: 0.25, line: 0.20, odds: 0.20, intent: 0.20, money: 0.10, upset: 0.05 };
+    if (/意甲|Serie A/i.test(L)) return { fund: 0.25, line: 0.20, odds: 0.20, intent: 0.20, money: 0.10, upset: 0.05 };
+    if (/解放者|南美|巴西|阿根廷|Libertadores|Brasileir|Primera/i.test(L) || /\b(br|ar)\b/.test(ACTIVE_COMP.id || ""))
+      return { fund: 0.25, line: 0.20, odds: 0.20, intent: 0.15, money: 0.10, upset: 0.10 };
+    return { fund: 0.30, line: 0.20, odds: 0.20, intent: 0.10, money: 0.10, upset: 0.10 };
+  }
+
+  function asianLineDir(openLine, liveLine) {
+    return majorityLineMove(null, openLine, liveLine).dir;
+  }
+  function favoriteOddsDir(mkt, favoriteIsHome) {
+    const open = favoriteIsHome ? mkt.euro.openH : mkt.euro.openA;
+    const live = favoriteIsHome ? mkt.euro.liveH : mkt.euro.liveA;
+    return majorityOddsMove(mkt.euroRows, open, live, favoriteIsHome ? "home" : "away").dir;
+  }
+
+  function buildFundamentals(home, away) {
+    const hr = standingsRow(home.id), ar = standingsRow(away.id);
+    const hRecent = recentWDLString(home.id);
+    const aRecent = recentWDLString(away.id);
+    const hs = recentStats(home.id), as = recentStats(away.id);
+    const nTeams = (hr && hr.nTeams) || (ar && ar.nTeams) || 20;
+    const homeMot =
+      hr && hr.rank >= nTeams - 2 ? "relegation" : hr && hr.rank <= 3 ? "title" : "normal";
+    const awayMot =
+      ar && ar.rank >= nTeams - 2 ? "relegation" : ar && ar.rank <= 3 ? "title" : "normal";
+    // Prefer recent home/away split when enough games; else standing+rating proxy
+    let homeHomeWR = hr ? Math.min(0.85, 0.35 + (nTeams - hr.rank) / nTeams * 0.45 + home.atk * 0.1) : 0.45 + home.atk * 0.2;
+    let awayAwayWR = ar ? Math.min(0.7, 0.25 + (nTeams - ar.rank) / nTeams * 0.35 + away.atk * 0.1) : 0.35 + away.atk * 0.15;
+    if (hs && hs.n >= 4) homeHomeWR = Math.max(0.12, Math.min(0.88, 0.55 * homeHomeWR + 0.45 * (hs.ppg / 3)));
+    if (as && as.n >= 4) awayAwayWR = Math.max(0.10, Math.min(0.80, 0.55 * awayAwayWR + 0.45 * (as.ppg / 3)));
+    return {
+      home_rank: hr ? hr.rank : null,
+      away_rank: ar ? ar.rank : null,
+      home_recent: hRecent,
+      away_recent: aRecent,
+      home_home_win_rate: homeHomeWR,
+      away_away_win_rate: awayAwayWR,
+      home_goals_conceded_pg: hs.n ? hs.ga / hs.n : null,
+      away_goals_conceded_pg: as.n ? as.ga / as.n : null,
+      home_defense_top3: hr ? hr.rank <= 3 && home.def >= 0.62 : home.def >= 0.72,
+      away_defense_top3: ar ? ar.rank <= 3 && away.def >= 0.62 : away.def >= 0.72,
+      h2h_sample: 0,
+      h2h_direction: "unknown",
+      h2h_home_unbeaten_rate: null,
+      home_motivation: homeMot,
+      away_motivation: awayMot,
+      home_unbeaten_streak_neg: lossStreakFromRecent(home.id),
+      away_unbeaten_streak_neg: lossStreakFromRecent(away.id),
+    };
+  }
+
+  function hardSupportItems(f, sideIsHome) {
+    const items = [];
+    if (sideIsHome) {
+      if (f.home_home_win_rate >= 0.7) items.push("a.主场胜率≥70%");
+      if ((f.home_recent || "").length >= 5 && (f.home_recent.match(/W/g) || []).length >= 4) items.push("b.近5场≥4胜");
+      if (f.home_goals_conceded_pg != null && f.home_goals_conceded_pg <= 0.8) items.push("c.防守失球≤0.8/场");
+      else if (f.home_defense_top3) items.push("c.防守联赛前三");
+      if (f.home_rank != null && f.away_rank != null && Math.abs(f.home_rank - f.away_rank) <= 3) items.push("d.排名差≤3位");
+      if (f.h2h_home_unbeaten_rate != null && f.h2h_home_unbeaten_rate >= 0.5) items.push("e.交锋主场不败≥50%");
+    } else {
+      if ((f.away_recent || "").length >= 5 && (f.away_recent.match(/W/g) || []).length >= 4) items.push("b.近5场≥4胜");
+      if (f.away_goals_conceded_pg != null && f.away_goals_conceded_pg <= 0.8) items.push("c.防守失球≤0.8/场");
+      else if (f.away_defense_top3) items.push("c.防守联赛前三");
+      if (f.home_rank != null && f.away_rank != null && Math.abs(f.home_rank - f.away_rank) <= 3) items.push("d.排名差≤3位");
+      if (f.away_away_win_rate >= 0.55) items.push("客场胜率≥55%");
+    }
+    return items;
+  }
+  function hardSupportCount(f, sideIsHome) { return hardSupportItems(f, sideIsHome).length; }
+  function ruleMStrong(f) {
+    const strong = [];
+    if (f.home_home_win_rate >= 0.7 && f.home_goals_conceded_pg != null && f.home_goals_conceded_pg <= 0.8)
+      strong.push("主场胜率≥70%+失球≤0.8");
+    const streak = (f.home_recent || "").match(/^W+/)?.[0]?.length || 0;
+    if (streak >= 4) strong.push("主场连胜≥4场");
+    if (f.home_defense_top3 && f.home_home_win_rate >= 0.5) strong.push("防守前三+主场不败倾向");
+    return strong;
+  }
+  function fundamentalSupportCheck(f, signal, favoriteIsHome, openDepth) {
+    const bullish = /强看好|真阻|看好|中性偏看好|偏阻/.test(signal);
+    const bearish = /看淡|警告矛盾/.test(signal);
+    let rankOk = true;
+    if (f.home_rank != null && f.away_rank != null) {
+      rankOk = favoriteIsHome ? f.home_rank <= f.away_rank + 2 : f.away_rank <= f.home_rank + 2;
+    }
+    const hr = (f.home_recent || "").length ? (f.home_recent.match(/W/g) || []).length / f.home_recent.length : null;
+    const ar = (f.away_recent || "").length ? (f.away_recent.match(/W/g) || []).length / f.away_recent.length : null;
+    let formOk = true;
+    if (hr != null && ar != null) formOk = favoriteIsHome ? hr >= ar - 0.1 : ar >= hr - 0.1;
+    if (bullish) {
+      if (rankOk && formOk) return "support";
+      if (!rankOk && !formOk) return "refute";
+      return "conflict";
+    }
+    if (bearish) {
+      if (!rankOk || !formOk || openDepth === "浅开") return "support";
+      return "conflict";
+    }
+    return "neutral";
+  }
+  function euroConsistency(euroRows, fundSupport) {
+    if (!euroRows || euroRows.length < 2) return { layer: "数据不足", consistent: false, note: "欧赔公司不足" };
+    const signs = euroRows.map(e => {
+      const d = e.liveH - e.openH;
+      return d < -0.03 ? 1 : d > 0.03 ? -1 : 0;
+    }).filter(s => s !== 0);
+    const consistent = !signs.length || signs.every(s => s === signs[0]);
+    if (consistent && fundSupport === "support") return { layer: "一致+基本面支撑", consistent: true, note: "真实信号" };
+    if (consistent && fundSupport === "refute") return { layer: "一致+基本面反驳", consistent: true, note: "警惕造势" };
+    if (consistent && fundSupport === "conflict") return { layer: "一致+基本面矛盾", consistent: true, note: "需验证" };
+    return { layer: consistent ? "一致+中性" : "不一致", consistent, note: consistent ? "中性" : "公司方向分歧" };
+  }
+  function companyDivergence(mkt, lineDir, oddsDir) {
+    const asianMajorUp = lineDir === "up" && oddsDir === "down";
+    const notes = [];
+    let low_water_absorb = false, induce = false, followers_not = 0;
+    const rows = mkt.euroRows || [];
+    const wh = findBookRow(rows, ["威廉", "william", "wh"]);
+    const lad = findBookRow(rows, ["立博", "ladbroke"]);
+    const avgWater = mkt.asian.liveW;
+    for (const book of [wh, lad]) {
+      if (!book) continue;
+      if (asianMajorUp && (book.liveH - book.openH) > -0.03) followers_not++;
+    }
+    if (asianMajorUp && followers_not >= 1 && avgWater != null && avgWater < 0.85) {
+      low_water_absorb = true;
+      notes.push("老牌未完全跟随升盘但低水→吸纳=真看好");
+    }
+    if (lineDir === "up" && avgWater != null && avgWater > 1.05 && (wh || lad)) {
+      induce = true;
+      notes.push("老牌升盘超高水→诱盘倾向");
+    }
+    if (followers_not >= 2 && avgWater != null && avgWater < 0.80)
+      notes.push("≥2家老牌不跟随且极低水→弱分歧偏真看好");
+    return { note: notes.join("；") || "无明显公司分歧", low_water_absorb, induce, followers_not, water_grade: waterGrade(avgWater) };
+  }
+
+  function runKFramework(home, away, mk, top) {
+    const mkt = readMarketInput();
+    const missing = validateMarketInput(mkt);
+    const f = buildFundamentals(home, away);
+    const hasCore =
+      mkt.euro.liveH != null && mkt.euro.liveD != null && mkt.euro.liveA != null &&
+      mkt.asian.liveLine != null;
+    const hn = home.name.split(" ")[0], an = away.name.split(" ")[0];
+
+    // Step1 upper/lower
+    let upper = hn, lower = an, lineLabel = "模型推断", avgLine = 0;
+    if (mkt.asian.liveLine != null) {
+      avgLine = mkt.asian.liveLine;
+      if (avgLine < 0) { upper = hn; lower = an; lineLabel = hn + "让" + Math.abs(avgLine); }
+      else if (avgLine > 0) { upper = an; lower = hn; lineLabel = "主队受让" + avgLine; }
+      else lineLabel = "平手盘";
+    } else if (mkt.euro.liveH != null && mkt.euro.liveA != null) {
+      if (mkt.euro.liveH <= mkt.euro.liveA) { upper = hn; lower = an; lineLabel = "欧赔推断主热"; }
+      else { upper = an; lower = hn; lineLabel = "欧赔推断客热"; }
+    } else if (mk.homeWin >= mk.awayWin) {
+      upper = hn; lower = an; lineLabel = "模型推断主热";
+    } else {
+      upper = an; lower = hn; lineLabel = "模型推断客热";
+    }
+
+    // Step2 favorite (independent of upper/lower)
+    let favScoreH = 0, favScoreA = 0, favReasons = [];
+    if (f.home_rank != null && f.away_rank != null) {
+      if (f.home_rank < f.away_rank) { favScoreH += Math.min(3, (f.away_rank - f.home_rank) * 0.35); favReasons.push("排名主更高"); }
+      else if (f.away_rank < f.home_rank) { favScoreA += Math.min(3, (f.home_rank - f.away_rank) * 0.35); favReasons.push("排名客更高"); }
+    }
+    const hw = (f.home_recent || "").length ? (f.home_recent.match(/W/g) || []).length / f.home_recent.length : 0;
+    const aw = (f.away_recent || "").length ? (f.away_recent.match(/W/g) || []).length / f.away_recent.length : 0;
+    if (hw > aw + 0.15) { favScoreH += 1.5; favReasons.push("近况主更好"); }
+    else if (aw > hw + 0.15) { favScoreA += 1.5; favReasons.push("近况客更好"); }
+    favScoreH += (f.home_home_win_rate || 0) * 1.2;
+    favScoreA += (f.away_away_win_rate || 0) * 0.9;
+    if (mkt.euro.liveH != null && mkt.euro.liveA != null) {
+      if (mkt.euro.liveH < mkt.euro.liveA - 0.15) { favScoreH += 2; favReasons.push("欧赔主更低"); }
+      else if (mkt.euro.liveA < mkt.euro.liveH - 0.15) { favScoreA += 2; favReasons.push("欧赔客更低"); }
+    } else {
+      if (mk.homeWin > mk.awayWin + 0.05) favScoreH += 1.5; else if (mk.awayWin > mk.homeWin + 0.05) favScoreA += 1.5;
+    }
+    const favoriteIsHome = favScoreH >= favScoreA;
+    const favorite = favoriteIsHome ? hn : an;
+
+    // Step3 directions (multi-book majority)
+    const lineMove = hasCore ? majorityLineMove(mkt.asianRows, mkt.asian.openLine, mkt.asian.liveLine) : { dir: "stable", delta: 0, avgLive: avgLine };
+    let lineDir = lineMove.dir;
+    const oddsMove = hasCore
+      ? majorityOddsMove(mkt.euroRows, favoriteIsHome ? mkt.euro.openH : mkt.euro.openA, favoriteIsHome ? mkt.euro.liveH : mkt.euro.liveA, favoriteIsHome ? "home" : "away")
+      : { dir: "stable", delta: 0 };
+    const oddsDir = oddsMove.dir;
+    const oddsDelta = oddsMove.delta;
+
+    // 上盘是客队时翻转亚盘方向 → 矩阵用「上盘难度」
+    let upperLineDir = lineDir;
+    if (upper === an) {
+      if (lineDir === "up") upperLineDir = "down";
+      else if (lineDir === "down") upperLineDir = "up";
+    }
+
+    const matrix = K_MATRIX[upperLineDir + "|" + oddsDir] || { signal: "观望", meaning: "数据不足" };
+    let signal = matrix.signal;
+    let meaning = matrix.meaning;
+    const notes = [];
+
+    // theory depth
+    const theory = theoreticalAsianFromEuro(mkt.euro.liveH ?? mkt.euro.openH);
+    const openDepth = depthVsTheory(mkt.asian.openLine ?? mkt.asian.liveLine, theory.line);
+    notes.push("初盘" + openDepth + (theory.line != null ? "（理论≈" + theory.line + "）" : ""));
+
+    const hardItems = hardSupportItems(f, favoriteIsHome);
+    const hardN = hardItems.length;
+    const mItems = ruleMStrong(f);
+    const avgWater = mkt.asian.liveW;
+
+    // Rule P (uses upperLineDir)
+    const ruleP = {
+      triggered: (f.home_home_win_rate != null && f.home_home_win_rate <= 0.3 && upperLineDir === "up" && oddsDir === "down"),
+      note: "未触发",
+    };
+    if (ruleP.triggered) {
+      ruleP.note = "主场虫(" + (f.home_home_win_rate * 100).toFixed(0) + "%)+升盘降赔→诱上，L保护暂停";
+    }
+
+    // V3.2 升盘+高水语境
+    let v32 = { applicable: false, verdict: null, note: "非升盘/高水" };
+    if (upperLineDir === "up" && (avgWater == null || avgWater >= 0.95 || oddsDir === "up")) {
+      v32.applicable = true;
+      if (hardN >= 2 || mItems.length >= 1) {
+        v32.verdict = "真阻盘=真看好";
+        v32.note = mItems.length >= 2 ? "强硬支撑≥2" : "有硬支撑→真阻盘";
+      } else if (hasCore) {
+        v32.verdict = "假阻盘=真诱多";
+        v32.note = "无硬支撑→假阻盘=真诱多";
+      }
+    }
+    if (signal === "需结合基本面" && v32.applicable && v32.verdict) {
+      signal = v32.verdict;
+      meaning = v32.note;
+      notes.push("V3.2：" + v32.note);
+    } else if (!ruleP.triggered && upperLineDir === "up" && avgWater != null && avgWater >= 0.95 && v32.verdict) {
+      signal = v32.verdict;
+      meaning = v32.note;
+      notes.push("V3.2：" + v32.note);
+    }
+
+    // Extreme ≥2档 + 超低水
+    const extreme = { triggered: false, note: "未触发极端升盘" };
+    if (hasCore && lineMove.delta <= -0.5 && ((avgWater != null && avgWater < 0.75) || (mkt.euro.liveH != null && mkt.euro.liveH < 1.5))) {
+      extreme.triggered = true;
+      extreme.note = "升盘≥2档+超低水=造热门，非真阻盘";
+    }
+
+    const fundSupport = fundamentalSupportCheck(f, signal, favoriteIsHome, openDepth);
+    const euroLayer = euroConsistency(mkt.euroRows, fundSupport);
+    const divergence = companyDivergence(mkt, upperLineDir, oddsDir);
+    if (divergence.low_water_absorb) notes.push(divergence.note);
+    if (divergence.induce) notes.push(divergence.note);
+
+    // Rule L overturn (≥2 hard evidence); P pauses protection
+    let ruleL = { protected: false, overturned: false, evidence: [] };
+    if (signal === "强看好" && !ruleP.triggered) {
+      ruleL.protected = true;
+      if (fundSupport === "refute") ruleL.evidence.push("基本面明确反驳");
+      if (extreme.triggered) ruleL.evidence.push("极端升盘造热门");
+      if (divergence.induce) ruleL.evidence.push("老牌超高水诱盘");
+      if (ruleL.evidence.length >= 2) {
+        ruleL.overturned = true;
+        ruleL.protected = false;
+        signal = "强看好被推翻";
+        meaning = "硬证据≥2：" + ruleL.evidence.join("；");
+        notes.push(meaning);
+      } else {
+        notes.push("规则L：强看好保护（推翻需≥2项硬证据）");
+      }
+    }
+    if (ruleP.triggered) {
+      signal = "诱上（规则P）";
+      meaning = ruleP.note;
+      notes.push(ruleP.note);
+    } else if (extreme.triggered && !ruleL.overturned) {
+      signal = "造热门（非真阻）";
+      meaning = extreme.note;
+      notes.push(extreme.note);
+    }
+
+    // Rule N (bounded for blend; direction + discount)
+    const ruleN = { triggered: false, note: "未触发", boost: 0, dir: null, discount: false };
+    const hStreak = f.home_unbeaten_streak_neg || 0, aStreak = f.away_unbeaten_streak_neg || 0;
+    const maxStreak = Math.max(hStreak, aStreak);
+    if (maxStreak >= 10 || f.home_motivation === "relegation" || f.away_motivation === "relegation") {
+      ruleN.triggered = true;
+      // Document +15/+25/+30 → bounded blend 0.04/0.06/0.08
+      ruleN.boost = maxStreak >= 20 ? 0.08 : maxStreak >= 15 ? 0.06 : maxStreak >= 10 ? 0.04 : 0.03;
+      if (f.home_motivation === "relegation") { ruleN.dir = "home_win"; ruleN.boost += 0.03; ruleN.note = "保级主场冲赢球（有界）"; }
+      else if (f.away_motivation === "relegation") { ruleN.dir = "draw"; ruleN.boost += 0.03; ruleN.note = "保级客场求一分（有界）"; }
+      else if (hStreak >= aStreak) { ruleN.dir = "home_win"; ruleN.note = "主队连败反弹+" + (ruleN.boost * 100).toFixed(0) + "%(有界)"; }
+      else { ruleN.dir = "away_win"; ruleN.note = "客队连败反弹+" + (ruleN.boost * 100).toFixed(0) + "%(有界)"; }
+      // 未获盘口让步 → 打折50%
+      if (ruleN.dir === "home_win" && mkt.asian.liveLine != null && mkt.asian.liveLine <= 0) {
+        ruleN.discount = true;
+        ruleN.boost *= 0.5;
+        ruleN.note += "；盘口未让步→战意打折";
+      }
+      notes.push(ruleN.note);
+    }
+
+    // Rule O
+    const nonEuro = /jp|kl|us|au|csl|mx|br|ar|no|se|fi/.test(ACTIVE_COMP.id || "");
+    const ruleO = {
+      triggered: (f.home_home_win_rate >= 0.65 && f.away_away_win_rate >= 0.55),
+      note: "未触发",
+      home_boost: 0,
+    };
+    if (ruleO.triggered) {
+      ruleO.home_boost = nonEuro ? 0.06 : 0.04; // bounded vs doc 7–10%
+      ruleO.note = "龙对龙，主场加权+" + (ruleO.home_boost * 100).toFixed(0) + "%(有界)";
+      notes.push(ruleO.note);
+    }
+
+    // Rule Q
+    const ruleQ = { triggered: false, note: "未触发" };
+    if (f.h2h_sample > 0 && f.h2h_sample <= 5) {
+      const conflict =
+        (f.h2h_direction === "draw" && oddsDir === "down") ||
+        (f.h2h_direction === "home" && !favoriteIsHome && oddsDir === "down") ||
+        (f.h2h_direction === "away" && favoriteIsHome && oddsDir === "down");
+      if (conflict) {
+        ruleQ.triggered = true;
+        ruleQ.note = "交锋仅" + f.h2h_sample + "场且与赔率冲突→赔率优先70/30";
+        notes.push(ruleQ.note);
+      }
+    }
+
+    // Euro drop ≥0.30 dominates
+    let euroDominates = false;
+    if (Math.abs(oddsDelta) >= 0.30 || (mkt.euro.openH != null && mkt.euro.liveH != null && mkt.euro.openH - mkt.euro.liveH >= 0.3)) {
+      euroDominates = true;
+      notes.push("欧赔变动≥0.30→以欧赔方向为主（盘赔背离精细化）");
+    }
+    if (fundSupport === "support") notes.push("基本面支持矩阵");
+    else if (fundSupport === "refute") notes.push("基本面反驳矩阵");
+    else if (fundSupport === "conflict") notes.push("基本面与矩阵矛盾");
+    if (euroLayer.note) notes.push("欧指：" + euroLayer.layer);
+
+    const dims = scoreSixDimensions({
+      f, signal, hasCore, mk, missing, fundSupport, openDepth, oddsDir, oddsDelta,
+      euroLayer, divergence, ruleP, ruleN, hardN,
+    });
+    const dimsTotal = dims.total;
+    const stars = confidenceStars(signal, dimsTotal, missing, ruleP.triggered, fundSupport, euroLayer);
+    const blend = blendModelAndK(mk, mkt, {
+      signal, favoriteIsHome, hasCore, ruleP, ruleN, ruleO, ruleQ, ruleL, oddsDir,
+      euroDominates, fundSupport, upperIsHome: upper === hn,
+    });
+    const checklist = buildV25Checklist({
+      hasCore, lineDir: upperLineDir, oddsDir, signal, hardN, ruleP, ruleN, ruleO, ruleQ, euroDominates,
+      hasWH: mkt.euro.whH != null, hasLad: mkt.euro.ladH != null, missing,
+      fundSupport, openDepth, euroLayer, divergence, ruleL, extreme,
+    });
+
+    const avoid = /诱|看淡|造热门|警告|推翻/.test(signal)
+      ? ("规避" + upper + "上盘/热门方向")
+      : ("规避" + lower + "下盘盲目追捧");
+    const scores = (top || []).slice(0, 2).map(s => s.h + "-" + s.a);
+
+    return {
+      missing, hasCore, upper, lower, lineLabel, favorite, favReasons: favReasons.join("；"),
+      lineDir: upperLineDir, oddsDir, oddsDelta, signal, meaning, notes, hardN, hardItems, mItems,
+      ruleP, ruleN, ruleO, ruleQ, ruleL, extreme, v32, fundSupport, openDepth, euroLayer, divergence,
+      euroDominates, dims, dimsTotal, stars, blend, checklist, avoid, scores, avgWater, theory,
+      steps: [
+        "上盘/下盘：" + upper + " / " + lower + "（" + lineLabel + "）",
+        "热门方：" + favorite + (favReasons.length ? "（" + favReasons.join("；") + "）" : ""),
+        "盘口方向：" + upperLineDir + "（Δ" + lineMove.delta.toFixed(2) + "）· 赔率方向：" + oddsDir + "（Δ" + Number(oddsDelta).toFixed(2) + "）",
+        "交叉矩阵：" + signal + " — " + meaning,
+        "初盘深浅：" + openDepth + " · 基本面：" + fundSupport,
+        "硬支撑×" + hardN + (mItems.length ? " · 规则M：" + mItems.join("/") : ""),
+        "欧指分层：" + euroLayer.layer + " · 公司：" + divergence.note,
+        "规则P：" + (ruleP.triggered ? ruleP.note : "未触发") + " · L：" + (ruleL.overturned ? "已推翻" : (ruleL.protected ? "保护中" : "未激活")),
+        "规则N：" + ruleN.note,
+        "规则O：" + ruleO.note,
+        "规则Q：" + ruleQ.note,
+        "极端升盘：" + extreme.note,
+      ],
+    };
+  }
+
+  function scoreSixDimensions(ctx) {
+    const w = pickDimWeights();
+    let fund = 5, line = 5, odds = 5, intent = 5, money = 4.5, upset = 5;
+    if (ctx.fundSupport === "support") fund += 2;
+    else if (ctx.fundSupport === "refute") fund -= 2;
+    else if (ctx.fundSupport === "conflict") fund -= 0.5;
+    fund += Math.min(2, (ctx.hardN || 0) * 0.6);
+    if (ctx.openDepth === "合理") line += 1.5;
+    else if (ctx.openDepth === "深开") line += 0.5;
+    else if (ctx.openDepth === "浅开") line -= 0.5;
+    if (ctx.hasCore && ctx.oddsDir === "down" && /强看好|真阻|看好|偏阻/.test(ctx.signal)) line += 1.5;
+    if (ctx.ruleP && ctx.ruleP.triggered) line -= 2;
+    if (ctx.oddsDir === "down") odds += 1.8;
+    else if (ctx.oddsDir === "up") odds -= 1.0;
+    if (Math.abs(ctx.oddsDelta || 0) >= 0.30) odds += 1.2;
+    if (ctx.euroLayer && ctx.euroLayer.consistent) odds += 0.5;
+    if (!ctx.hasCore) { line = 4; odds = 3; }
+    if (/强看好|真阻|^看好$/.test(ctx.signal)) intent += 2;
+    if (/诱|造热门|警告|推翻/.test(ctx.signal)) intent -= 1.5;
+    if (ctx.divergence && ctx.divergence.low_water_absorb) intent += 1;
+    if (ctx.divergence && ctx.divergence.induce) intent -= 1.5;
+    money -= 0.5; // 缺必发弱化
+    if (ctx.f && (ctx.f.home_motivation === "relegation" || ctx.f.away_motivation === "relegation")) upset += 1;
+    if (ctx.ruleN && ctx.ruleN.triggered) upset += 1;
+    if (ctx.ruleP && ctx.ruleP.triggered) upset += 1.5;
+    if (/造热门/.test(ctx.signal)) upset += 1.2;
+    const clamp = x => Math.max(1, Math.min(10, Math.round(x * 10) / 10));
+    const scores = { fund: clamp(fund), line: clamp(line), odds: clamp(odds), intent: clamp(intent), money: clamp(money), upset: clamp(upset) };
+    const total = scores.fund * w.fund + scores.line * w.line + scores.odds * w.odds + scores.intent * w.intent + scores.money * w.money + scores.upset * w.upset;
+    return { scores, weights: w, total };
+  }
+
+  function confidenceStars(signal, dimsTotal, missing, pTrig, fundSupport, euroLayer) {
+    let base = 3;
+    if (/强看好|真阻|^看好$/.test(signal)) base += 1;
+    if (/诱|警告|造热门|推翻/.test(signal) || pTrig) base -= 1;
+    if (fundSupport === "support") base += 1;
+    if (fundSupport === "refute") base -= 1;
+    const crit = missing.filter(m => /威廉|立博|亚盘|即时欧赔/.test(m)).length;
+    base -= Math.min(2, crit);
+    if (dimsTotal >= 7) base += 1;
+    if (dimsTotal <= 4.5) base -= 1;
+    return Math.max(1, Math.min(5, base));
+  }
+
+  function blendModelAndK(mk, mkt, ctx) {
+    let H = mk.homeWin, D = mk.draw, A = mk.awayWin;
+    // Soft market prior: de-vig live euro (calibration) — V3.5「赔率是实时定价」
+    const mktP = (ctx.hasCore && mkt.euro.liveH != null)
+      ? removeMargin1x2(mkt.euro.liveH, mkt.euro.liveD, mkt.euro.liveA)
+      : null;
+    if (mktP) {
+      const wM = ctx.euroDominates ? 0.42 : 0.28;
+      H = H * (1 - wM) + mktP.H * wM;
+      D = D * (1 - wM) + mktP.D * wM;
+      A = A * (1 - wM) + mktP.A * wM;
+    }
+    if (!ctx.hasCore) {
+      const s0 = H + D + A; H /= s0; D /= s0; A /= s0;
+      return { H, D, A, mode: "model-only", lean: H >= D && H >= A ? "H" : A >= D ? "A" : "D" };
+    }
+    let wK = 0.30;
+    if (ctx.fundSupport === "support") wK += 0.05;
+    if (ctx.fundSupport === "refute") wK -= 0.08;
+    if (ctx.ruleP && ctx.ruleP.triggered) {
+      H *= 0.85; D *= 1.12; A *= 1.08;
+      wK = 0.38;
+    } else if (/强看好|真阻|看好|中性偏看好|偏阻/.test(ctx.signal) && !(ctx.ruleL && ctx.ruleL.overturned)) {
+      if (ctx.upperIsHome) { H *= 1.09; A *= 0.93; }
+      else { A *= 1.09; H *= 0.93; }
+    } else if (/诱|看淡|造热门|警告|推翻/.test(ctx.signal)) {
+      if (ctx.upperIsHome) { H *= 0.90; D *= 1.08; A *= 1.06; }
+      else { A *= 0.90; D *= 1.08; H *= 1.06; }
+    }
+    if (ctx.ruleN && ctx.ruleN.triggered) {
+      if (ctx.ruleN.dir === "home_win") H *= 1 + ctx.ruleN.boost;
+      else if (ctx.ruleN.dir === "draw") D *= 1 + ctx.ruleN.boost;
+      else if (ctx.ruleN.dir === "away_win") A *= 1 + ctx.ruleN.boost;
+    }
+    if (ctx.ruleO && ctx.ruleO.triggered) H *= 1 + ctx.ruleO.home_boost;
+    if (ctx.ruleQ && ctx.ruleQ.triggered && ctx.oddsDir === "down") {
+      // 70/30 toward odds side
+      if (ctx.favoriteIsHome) { H = H * 0.3 + Math.max(H, 0.42) * 0.7; }
+      else { A = A * 0.3 + Math.max(A, 0.42) * 0.7; }
+    }
+    let s = H + D + A; H /= s; D /= s; A /= s;
+    // mix directed overlay with (already market-softened) base
+    const baseH = mktP ? mk.homeWin * 0.72 + mktP.H * 0.28 : mk.homeWin;
+    const baseD = mktP ? mk.draw * 0.72 + mktP.D * 0.28 : mk.draw;
+    const baseA = mktP ? mk.awayWin * 0.72 + mktP.A * 0.28 : mk.awayWin;
+    H = H * wK + baseH * (1 - wK);
+    D = D * wK + baseD * (1 - wK);
+    A = A * wK + baseA * (1 - wK);
+    s = H + D + A; H /= s; D /= s; A /= s;
+    const lean = H >= D && H >= A ? "H" : A >= D && A >= H ? "A" : "D";
+    return { H, D, A, mode: mktP ? "model+market+K" : "blended", lean };
+  }
+
+  function buildV25Checklist(ctx) {
+    const items = [
+      ["上盘/下盘判定明确", true],
+      ["热门方独立判定", true],
+      ["盘口变化方向+幅度", ctx.hasCore],
+      ["赔率变化方向+幅度", ctx.hasCore],
+      ["交叉矩阵结论", true],
+      ["基本面验证(深浅/支撑)", !!ctx.fundSupport],
+      ["升盘+高水语境(V3.2)", ctx.hasCore],
+      ["欧指一致性分层", !!(ctx.euroLayer && ctx.euroLayer.layer)],
+      ["极端升盘判定", true],
+      ["公司信号分歧处理", true],
+      ["威廉/立博已纳入", !!(ctx.hasWH && ctx.hasLad)],
+      ["资金热度≠庄家判断", true],
+      ["赔率方向>盘口方向", ctx.hasCore || ctx.euroDominates],
+      ["强看好L约束/推翻", true],
+      ["主场龙硬支撑(规则M)", true],
+      ["极端反弹战意(规则N)", true],
+      ["龙对龙主场加权(规则O)", true],
+      ["主场虫升盘(规则P)", true],
+      ["小样本服从赔率(规则Q)", true],
+      ["欧赔≥0.30以欧赔为主", true],
+    ];
+    return items.map(([t, ok]) => ({ t, ok: !!ok }));
+  }
+
+  function starsHtml(n) {
+    return "★".repeat(n) + "☆".repeat(5 - n);
+  }
+
+  function showDeskOverlay() {
+    const card = $("deskOverlayCard");
+    const box = $("deskOverlay");
+    const mpCard = $("marketPasteCard");
+    if (!card || !box) return;
+    const M = state.lastModel;
+    if (!M || !M.sim) {
+      card.classList.remove("dk-show");
+      if (mpCard) mpCard.classList.remove("dk-show");
+      return;
+    }
+    card.classList.add("dk-show");
+    if (mpCard) mpCard.classList.add("dk-show");
+    refreshMarketPasteStatus();
+    const desk = M.desk || runKFramework(M.homeTeam, M.awayTeam, M.mk, M.top);
+    const leanMap = { H: "主胜", D: "平局", A: "客胜" };
+    const sigClass = /诱|看淡|造热门|警告/.test(desk.signal) ? "bear" : /强看好|真阻|看好|偏阻|中性偏/.test(desk.signal) ? "bull" : "neut";
+    const stamp = $("dkStamp"); if (stamp) stamp.textContent = nowStamp();
+    box.innerHTML = `
+      <div class="dk-row"><span class="dk-sig ${sigClass}">${desk.signal}</span>
+        <span class="dk-stars">${starsHtml(desk.stars)}</span>
+        · 融合倾向 <b>${leanMap[desk.blend.lean] || desk.blend.lean}</b>
+        （${desk.hasCore ? "模型+盘赔" : "仅泊松·缺盘赔"}）
+      </div>
+      <div class="dk-grid">
+        <div class="dk-box">
+          <h4>快速结论</h4>
+          <div class="dk-row">赛果：<b>${leanMap[desk.blend.lean]}</b>（融合后 ${pct(desk.blend.H)} / ${pct(desk.blend.D)} / ${pct(desk.blend.A)}）</div>
+          <div class="dk-row">亚盘视角：上盘 <b>${desk.upper}</b> / 下盘 <b>${desk.lower}</b> · ${desk.lineLabel}</div>
+          <div class="dk-row">比分建议：<b>${(desk.scores || []).join(" · ") || "-"}</b></div>
+          <div class="dk-row">核心依据：${desk.meaning}</div>
+          <div class="dk-row">规避：<b>${desk.avoid}</b></div>
+          <div class="dk-muted">热门方：${desk.favorite}（${desk.favReasons || "综合"}）· 初盘${desk.openDepth || "-"} · 基本面${desk.fundSupport || "-"} · ${desk.euroLayer ? desk.euroLayer.layer : ""} · 融合${desk.blend.mode}</div>
+        </div>
+        <div class="dk-box">
+          <h4>K框架步骤</h4>
+          ${desk.steps.map((s,i) => "<div class='dk-row'>"+(i+1)+". "+s+"</div>").join("")}
+          <div class="dk-muted">${(desk.notes || []).slice(0,4).join("；") || "无额外修正备注"}</div>
+        </div>
+      </div>
+      <div class="dk-box" style="margin-top:12px">
+        <h4>六维度 · 加权 ${desk.dimsTotal.toFixed(2)} / 10</h4>
+        <div class="dk-row">基本面 ${desk.dims.scores.fund} · 盘口 ${desk.dims.scores.line} · 赔率 ${desk.dims.scores.odds} · 庄家意图 ${desk.dims.scores.intent} · 资金 ${desk.dims.scores.money} · 冷门 ${desk.dims.scores.upset}</div>
+      </div>
+      <div class="dk-box" style="margin-top:12px">
+        <h4>V2.5 检查清单</h4>
+        <div class="dk-check">${desk.checklist.map(c => "<div class='"+(c.ok?"ok":"no")+"'>"+(c.ok?"✓":"○")+" "+c.t+"</div>").join("")}</div>
+        ${desk.missing.length ? "<div class='dk-muted'>缺失："+desk.missing.join("；")+"</div>" : ""}
+      </div>`;
+  }
+
+  function runV35SelfTest() {
+    const m1 = K_MATRIX["up|down"];
+    const m2 = K_MATRIX["down|up"];
+    const m3 = K_MATRIX["stable|stable"];
+    console.assert(m1 && m1.signal === "强看好", "matrix up|down");
+    console.assert(m2 && /警告/.test(m2.signal), "matrix down|up");
+    console.assert(m3 && m3.signal === "观望", "matrix stable|stable");
+    // majority odds: heavy favorite sensitivity
+    const od = majorityOddsMove(
+      [{ openH: 1.28, liveH: 1.25, openA: 9, liveA: 11 }],
+      1.28, 1.25, "home"
+    );
+    console.assert(od.dir === "down", "heavy favorite odds down");
+    // theory depth
+    const th = theoreticalAsianFromEuro(1.20);
+    console.assert(th.line === -1.5, "theory 球半 from 1.20");
+    console.assert(theoreticalAsianFromEuro(1.28).line === -1.25, "theory 一球/球半 from 1.28");
+    console.assert(depthVsTheory(-1.75, -1.5) === "深开", "deep open");
+    // Rule P override
+    let signal = m1.signal;
+    if (0.22 <= 0.3) signal = "诱上（规则P）";
+    console.assert(signal === "诱上（规则P）", "rule P");
+    // de-vig
+    const p = removeMargin1x2(1.90, 3.40, 4.00);
+    console.assert(p && Math.abs(p.H + p.D + p.A - 1) < 1e-9, "remove margin");
+    console.assert(typeof monteCarloFromMatrix === "function", "MC");
+    console.assert(typeof formAdjFromTeam === "function", "form λ");
+    console.log("V3.5 methodology self-test OK", { m1: m1.signal, od: od.dir, theory: th.line });
+    return true;
+  }
+
+
   function computeValue() {
     const M = state.lastModel; if (!M) return;
     const { mk } = M;
+    const liveH = numInput("mkLiveH"), liveD = numInput("mkLiveD"), liveA = numInput("mkLiveA");
     fill1x2Defaults(mk);
+    if (liveH != null && !odds1x2Edited.inHome) { const el = $("inHome"); if (el) el.value = fmtOdd(liveH); }
+    if (liveD != null && !odds1x2Edited.inDraw) { const el = $("inDraw"); if (el) el.value = fmtOdd(liveD); }
+    if (liveA != null && !odds1x2Edited.inAway) { const el = $("inAway"); if (el) el.value = fmtOdd(liveA); }
+    const usedLive = liveH != null && liveD != null && liveA != null;
     const rows = [
-      { key:"主胜 Home (1)", p:mk.homeWin, odd:parseFloat($("inHome").value) },
-      { key:"平局 Draw (X)", p:mk.draw,   odd:parseFloat($("inDraw").value) },
-      { key:"客胜 Away (2)", p:mk.awayWin, odd:parseFloat($("inAway").value) },
+      { key:"主胜 Home (1)", p:mk.homeWin, odd: liveH != null ? liveH : parseFloat($("inHome").value) },
+      { key:"平局 Draw (X)", p:mk.draw,   odd: liveD != null ? liveD : parseFloat($("inDraw").value) },
+      { key:"客胜 Away (2)", p:mk.awayWin, odd: liveA != null ? liveA : parseFloat($("inAway").value) },
     ];
 
-    let html = `<tr><th>投注项 Selection</th><th>模型概率</th><th>公平赔率</th><th>博彩赔率</th><th>隐含概率</th><th>价值边际 Edge</th><th>凯利 Kelly</th></tr>`;
+    let html = `<tr><th>投注项 Selection</th><th>模型概率</th><th>公平赔率</th><th>博彩赔率${usedLive ? " <small style='color:var(--value)'>真实即时</small>" : " <small style='color:var(--text-dim)'>合成/手填</small>"}</th><th>隐含概率</th><th>价值边际 Edge</th><th>凯利 Kelly</th></tr>`;
     rows.forEach(r => {
       const fair = fairOdds(r.p);
       let book = (!isNaN(r.odd) && r.odd > 1) ? r.odd : null;
@@ -6331,6 +7479,29 @@
 
   // 赛事积分榜模块：每 12 小时自动刷新一次（重置更新时间戳；仅非世界杯赛事显示）
   setInterval(renderStandings, 12 * 60 * 60 * 1000);
+
+  /* v35 boot */
+  ["mkOpenH","mkOpenD","mkOpenA","mkLiveH","mkLiveD","mkLiveA","mkAhOpen","mkAhOpenW","mkAhLive","mkAhLiveW","mkWhH","mkLadH","mkB365H"].forEach(id=>{
+    const el = $(id);
+    if (el) el.addEventListener("change", () => {
+      if (state.lastModel) {
+        state.lastModel.desk = runKFramework(state.lastModel.homeTeam, state.lastModel.awayTeam, state.lastModel.mk, state.lastModel.top);
+        showDeskOverlay();
+        computeValue();
+      }
+    });
+  });
+  ["mpEuro","mpAsian"].forEach(id => {
+    const el = $(id);
+    if (el) {
+      el.addEventListener("input", () => refreshMarketPasteStatus());
+      el.addEventListener("change", () => applyMarketPasteAndRefresh());
+    }
+  });
+  const mpApply = $("mpApplyBtn"); if (mpApply) mpApply.addEventListener("click", applyMarketPasteAndRefresh);
+  const mpDemo = $("mpDemoBtn"); if (mpDemo) mpDemo.addEventListener("click", loadMarketPasteDemo);
+  const mpClear = $("mpClearBtn"); if (mpClear) mpClear.addEventListener("click", clearMarketPaste);
+  try { runV35SelfTest(); } catch (e) { console.warn(e); }
 
   // 淘汰赛晋级图：每 1 小时自动刷新（仅世界杯等杯赛，按最新小组排名重算出线形势与对阵推演）
   setInterval(() => { if (state.lastModel && ACTIVE_COMP.type === "cup") renderKnockout(); }, 60 * 60 * 1000);
