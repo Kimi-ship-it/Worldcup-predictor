@@ -6230,18 +6230,28 @@
   }
 
   async function fetchSportteryToday() {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 20000);
-    try {
-      const res = await fetch(SCHED_CALIB_BASE + "/sporttery-today", { method: "GET", signal: ctrl.signal });
-      clearTimeout(timer);
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error((data && data.error) || ("HTTP " + res.status));
-      return data;
-    } catch (e) {
-      clearTimeout(timer);
-      throw e;
+    // 先试本机 sidecar，失败则走 n8n 公网（手机可用）
+    const urls = [
+      (typeof SCHED_CALIB_LOCAL !== "undefined" ? SCHED_CALIB_LOCAL : "http://127.0.0.1:17865") + "/sporttery-today",
+      typeof SCHED_CALIB_PUBLIC !== "undefined" ? SCHED_CALIB_PUBLIC : "https://workflow.rigol.com/webhook/wcp-sporttery-today",
+    ];
+    let lastErr = null;
+    for (let i = 0; i < urls.length; i++) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), i === 0 ? 2500 : 20000);
+      try {
+        const res = await fetch(urls[i], { method: "GET", signal: ctrl.signal });
+        clearTimeout(timer);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error((data && data.error) || ("HTTP " + res.status));
+        data._viaEndpoint = i === 0 ? "local" : "public";
+        return data;
+      } catch (e) {
+        clearTimeout(timer);
+        lastErr = e;
+      }
     }
+    throw lastErr || new Error("sporttery unavailable");
   }
 
   /** 校准服务不可用时：用本机各赛事「北京时间今天」真实赛程近似（非竞彩开售清单） */
@@ -6327,7 +6337,8 @@
         }
       }
       if (!matches.length) throw new Error("今日竞彩列表为空");
-      if (foot) foot.innerHTML = `来源：体彩网竞彩足球开售清单（businessDate＝北京时间今天）· 已映射预测 <b style="color:var(--accent)">${mapped}</b> 场 · 未收录 <b>${missed}</b> 场。卡片格式对齐「综合监控」；需本机校准服务 <code>127.0.0.1:17865</code>。`;
+      const via = data._viaEndpoint === "public" ? "公网 n8n" : "本机服务";
+      if (foot) foot.innerHTML = `来源：体彩网竞彩足球开售清单（${via}）· 已映射预测 <b style="color:var(--accent)">${mapped}</b> 场 · 未收录 <b>${missed}</b> 场。卡片含足彩赛事编号；格式对齐「综合监控」。`;
       sourceTag = "竞彩开售";
     } catch (e) {
       const local = collectLocalTodayFixtures();
@@ -6337,7 +6348,7 @@
         rowsHtml.push(omCardEx(x.fx, x.home, x.away, { league: x.league, kickLabel: x.kickLabel }));
         mapped++;
       }
-      if (foot) foot.innerHTML = `校准服务未返回竞彩开售（${String(e.message || e).replace(/</g, "")}），已回退为<strong style="color:var(--draw)">本机各赛事「北京时间今天」未完赛场次</strong>（非官方开售清单）。请确认 <code>calibrate_server.js</code> 已启动。`;
+      if (foot) foot.innerHTML = `竞彩接口不可用（${String(e.message || e).replace(/</g, "")}），已回退为<strong style="color:var(--draw)">本机各赛事「北京时间今天」未完赛场次</strong>（非官方开售清单）。`;
     }
     body.innerHTML = rowsHtml.length
       ? `<div class="om-head"><span class="om-ts">[${omNow()}]</span><span>今日汇总（${sourceTag}）· 综合监控格式</span><span class="om-live"><span class="om-dot"></span>${mapped} 场可预测</span></div><div class="om-grid">${rowsHtml.join("")}</div>`
@@ -8975,14 +8986,43 @@
     else buildLeagueSchedule(ACTIVE_COMP);
   });
 
-  /* ---------- 赛程校准：本机 sidecar 爬懂球帝+TM（+足彩/开云）写回 HTML ---------- */
-  const SCHED_CALIB_BASE = "http://127.0.0.1:17865";
+  /* ---------- 赛程校准（本机）+ 竞彩今日汇总（本机或公网 n8n）---------- */
+  const SCHED_CALIB_LOCAL = "http://127.0.0.1:17865";
+  const SCHED_CALIB_PUBLIC = "https://workflow.rigol.com/webhook/wcp-sporttery-today";
+  const SCHED_CALIB_BASE = SCHED_CALIB_LOCAL; // 兼容旧引用：写盘校准只走本机
   const SCHED_CALIB_LS = "wcp_sched_calib_last_v1";
   function setSchedCalibStatus(msg, ok) {
     const el = $("schedCalibStatus");
     if (!el) return;
     el.textContent = msg || "";
     el.style.color = ok === true ? "var(--accent)" : ok === false ? "#e85d5d" : "var(--text-dim)";
+  }
+  async function probeLocalCalib() {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 1200);
+      const h = await fetch(SCHED_CALIB_LOCAL + "/health", { method: "GET", signal: ctrl.signal });
+      clearTimeout(t);
+      return h.ok;
+    } catch (e) { return false; }
+  }
+  async function probePublicSporttery() {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 8000);
+      const h = await fetch(SCHED_CALIB_PUBLIC, { method: "GET", signal: ctrl.signal });
+      clearTimeout(t);
+      if (!h.ok) return false;
+      const data = await h.json().catch(() => ({}));
+      return !!data.ok;
+    } catch (e) { return false; }
+  }
+  async function refreshCalibStatusLine() {
+    const localOk = await probeLocalCalib();
+    if (localOk) { setSchedCalibStatus("本机校准已连接", true); return; }
+    const pubOk = await probePublicSporttery();
+    if (pubOk) { setSchedCalibStatus("竞彩公网已连接（今日汇总可用）", true); return; }
+    // 手机端常见：无本机服务；不刷红打扰，点「校准赛程」时再提示
   }
   async function runScheduleCalibrate(opts) {
     const silent = !!(opts && opts.silent);
@@ -8991,9 +9031,12 @@
     if (btn) { btn.dataset.busy = "1"; btn.disabled = true; }
     if (!silent) setSchedCalibStatus("正在校准…", null);
     try {
+      if (!(await probeLocalCalib())) {
+        throw new Error("LOCAL_OFFLINE");
+      }
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 180000);
-      const res = await fetch(SCHED_CALIB_BASE + "/calibrate", { method: "POST", signal: ctrl.signal });
+      const res = await fetch(SCHED_CALIB_LOCAL + "/calibrate", { method: "POST", signal: ctrl.signal });
       clearTimeout(timer);
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) throw new Error((data && data.error) || ("HTTP " + res.status));
@@ -9010,10 +9053,10 @@
       }
       return data;
     } catch (e) {
-      const offline = /Failed to fetch|NetworkError|abort/i.test(String(e.message || e));
+      const offline = e && e.message === "LOCAL_OFFLINE" || /Failed to fetch|NetworkError|abort/i.test(String(e.message || e));
       setSchedCalibStatus(
         offline
-          ? "校准服务未启动（请运行 sched-calibrate/calibrate_server.js）"
+          ? "写盘校准需电脑本机服务；今日汇总可走公网"
           : ("校准失败：" + (e.message || e)),
         false
       );
@@ -9152,21 +9195,13 @@
     }
   }, 30 * 60 * 1000);
 
-  // 赛程校准：每 24h 若本机 sidecar 在线则自动爬懂球帝+TM（与 Windows 计划任务互补；页面常开时生效）
-  (async () => {
-    try {
-      const h = await fetch(SCHED_CALIB_BASE + "/health", { method: "GET" });
-      if (h.ok) setSchedCalibStatus("校准服务已连接", true);
-    } catch (e) { /* 服务未开时静默，点按钮再提示 */ }
-  })();
+  // 状态：本机校准 / 竞彩公网；每 24h 仅在本机 sidecar 在线时自动写盘校准
+  refreshCalibStatusLine().catch(() => {});
   setInterval(async () => {
     let last = 0;
     try { last = Number(localStorage.getItem(SCHED_CALIB_LS) || 0); } catch (e) {}
     if (Date.now() - last < 23 * 60 * 60 * 1000) return;
-    try {
-      const h = await fetch(SCHED_CALIB_BASE + "/health", { method: "GET" });
-      if (!h.ok) return;
-    } catch (e) { return; }
+    if (!(await probeLocalCalib())) return;
     runScheduleCalibrate({ silent: true });
   }, 60 * 60 * 1000);
 })();
