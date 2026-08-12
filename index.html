@@ -1931,7 +1931,7 @@
 
   /* ---------- 巴甲 Brasileirão Série A ---------- */
   const BR_TEAMS = [
-    { id:"br1", name:"帕尔梅拉斯 Palmeiras",       atk:0.84, def:0.82 },
+    { id:"br1", name:"帕梅拉斯 Palmeiras",         atk:0.84, def:0.82 },
     { id:"br2", name:"弗拉门戈 Flamengo",          atk:0.86, def:0.80 },
     { id:"br3", name:"博塔弗戈 Botafogo",          atk:0.80, def:0.78 },
     { id:"br4", name:"克鲁塞罗 Cruzeiro",          atk:0.76, def:0.74 },
@@ -1944,7 +1944,7 @@
     { id:"br11",name:"科林蒂安 Corinthians",       atk:0.68, def:0.66 },
     { id:"br12",name:"红牛布拉甘蒂诺 Bragantino",  atk:0.66, def:0.66 },
     { id:"br13",name:"科里蒂巴 Coritiba",          atk:0.58, def:0.58 },
-    { id:"br14",name:"米拉索 Mirassol",            atk:0.62, def:0.60 },
+    { id:"br14",name:"米拉索尔 Mirassol",          atk:0.62, def:0.60 },
     { id:"br15",name:"巴拉纳竞技 Athletico-PR",    atk:0.66, def:0.64 },
     { id:"br16",name:"瓦斯科达伽马 Vasco",         atk:0.62, def:0.58 },
     { id:"br17",name:"桑托斯 Santos",              atk:0.60, def:0.58 },
@@ -1978,6 +1978,9 @@
     { id:"ar18",name:"班菲尔德 Banfield",          atk:0.56, def:0.58 },
     { id:"ar19",name:"科尔多瓦 Central Córdoba",   atk:0.58, def:0.60 },
     { id:"ar20",name:"蒂格雷 Tigre",               atk:0.56, def:0.60 },
+    // 解放者杯 2026 仍参赛、便于体彩/跨赛事映射
+    { id:"ar21",name:"普拉滕斯 Platense",          atk:0.60, def:0.60 },
+    { id:"ar22",name:"独立里瓦达维亚 Ind. Rivadavia", atk:0.58, def:0.58 },
   ];
 
   /* ---------- 墨超 Liga MX ---------- */
@@ -2159,6 +2162,32 @@
     { id:"acl22",name:"塞帕汉 Sepahan",            atk:0.64, def:0.64 },
     { id:"acl23",name:"塔什干棉农 Pakhtakor",      atk:0.62, def:0.62 },
     { id:"acl24",name:"纳萨吉 Nasaf",              atk:0.58, def:0.60 },
+  ];
+
+  /* ---------- 欧超杯 UEFA Super Cup 2026 ---------- */
+  const USC_TEAMS = [
+    { id:"usc1", name:"巴黎圣日耳曼 PSG",           atk:0.94, def:0.86 },
+    { id:"usc2", name:"阿斯顿维拉 Aston Villa",     atk:0.78, def:0.74 },
+  ];
+
+  /* ---------- 解放者杯 Copa Libertadores 2026（16 强池） ---------- */
+  const LIB_TEAMS = [
+    { id:"lib1",  name:"弗鲁米嫩 Fluminense",           atk:0.72, def:0.72 },
+    { id:"lib2",  name:"独立里瓦达维亚 Ind. Rivadavia", atk:0.58, def:0.58 },
+    { id:"lib3",  name:"拉普拉塔大学生 Estudiantes",   atk:0.72, def:0.74 },
+    { id:"lib4",  name:"天主教大学 U. Católica",       atk:0.64, def:0.64 },
+    { id:"lib5",  name:"托利马 Deportes Tolima",       atk:0.62, def:0.62 },
+    { id:"lib6",  name:"独立山谷 Ind. del Valle",      atk:0.68, def:0.66 },
+    { id:"lib7",  name:"普拉滕斯 Platense",            atk:0.60, def:0.60 },
+    { id:"lib8",  name:"科金博联 Coquimbo Unido",      atk:0.58, def:0.58 },
+    { id:"lib9",  name:"帕梅拉斯 Palmeiras",           atk:0.84, def:0.82 },
+    { id:"lib10", name:"波特诺 Cerro Porteño",         atk:0.66, def:0.64 },
+    { id:"lib11", name:"克鲁塞罗 Cruzeiro",            atk:0.76, def:0.74 },
+    { id:"lib12", name:"弗拉门戈 Flamengo",            atk:0.86, def:0.80 },
+    { id:"lib13", name:"米拉索尔 Mirassol",            atk:0.62, def:0.60 },
+    { id:"lib14", name:"基多体大 LDU Quito",           atk:0.66, def:0.64 },
+    { id:"lib15", name:"罗萨里奥中央 Rosario Central", atk:0.64, def:0.64 },
+    { id:"lib16", name:"科林蒂安 Corinthians",         atk:0.68, def:0.66 },
   ];
 
   /* ---------- 欧洲杯 UEFA Euro (国家队池) ---------- */
@@ -2609,6 +2638,37 @@
   ];
   // 欧联联赛阶段 2026–27：抽签未完成；UEL_SCHED 为资格赛 QR1–QR3。
   const UECL_SCHED = [
+  ];
+
+  /* ---------- 欧超杯 2026（萨尔茨堡中立场；CEST→BJ +6h） ----------
+     PSG（欧冠冠军）vs 阿斯顿维拉（欧联冠军）. Source: UEFA.com / Wikipedia. */
+  const USC_SCHED = [
+    [1,"usc1","usc2","08/13","03:00"],
+  ];
+
+  /* ---------- 解放者杯 2026 · 1/8决赛双回合（当地→北京）
+     BR/AR UTC-3→BJ +11h；CL UTC-4→BJ +12h；CO/EC UTC-5→BJ +13h.
+     Tolima–IDV 因地震改期：首回合 8/18、次回合 8/25.
+     Source: CONMEBOL / Wikipedia. */
+  const LIB_SCHED = [
+    // R16 首回合
+    [16,"lib1","lib2","08/12","06:00",0,0],   // 弗鲁米嫩 0-0 独立里瓦达维亚
+    [16,"lib3","lib4","08/12","08:30",1,0],   // 拉普拉塔大学生 1-0 天主教大学
+    [16,"lib7","lib8","08/13","06:00"],       // 普拉滕斯 vs 科金博联
+    [16,"lib9","lib10","08/13","06:00"],      // 帕梅拉斯 vs 波特诺
+    [16,"lib11","lib12","08/13","08:30"],     // 克鲁塞罗 vs 弗拉门戈
+    [16,"lib13","lib14","08/14","06:00"],     // 米拉索尔 vs 基多体大
+    [16,"lib15","lib16","08/14","08:30"],     // 罗萨里奥中央 vs 科林蒂安
+    [16,"lib5","lib6","08/19","08:30"],       // 托利马 vs 独立山谷（改期）
+    // R16 次回合
+    [16,"lib2","lib1","08/19","06:00"],       // 独立里瓦达维亚 vs 弗鲁米嫩
+    [16,"lib4","lib3","08/19","08:30"],       // 天主教大学 vs 拉普拉塔大学生（圣地亚哥 UTC-4）
+    [16,"lib8","lib7","08/20","06:00"],       // 科金博联 vs 普拉滕斯（科金博 UTC-4）
+    [16,"lib10","lib9","08/20","06:00"],      // 波特诺 vs 帕梅拉斯（亚松森 UTC-3）
+    [16,"lib12","lib11","08/20","08:30"],     // 弗拉门戈 vs 克鲁塞罗
+    [16,"lib14","lib13","08/21","06:00"],     // 基多体大 vs 米拉索尔（基多 UTC-5）
+    [16,"lib16","lib15","08/21","08:30"],     // 科林蒂安 vs 罗萨里奥中央
+    [16,"lib6","lib5","08/26","08:30"],       // 独立山谷 vs 托利马（改期）
   ];
 
   /* ---------- UEFA Europa League qualifying (2026-27, QR1–QR3) ----------
@@ -4302,7 +4362,9 @@
     uqr: Object.assign(leagueComp("uqr", "欧冠预选赛 UCL Qualifying", UQR_TEAMS, "欧冠资格赛 QR1–QR3 真实赛程（北京时间）· 已完赛含比分；附加赛/联赛阶段抽签后补", "uqr1", "uqr2"), { realSchedule:UQR_SCHED }),
     uel: Object.assign(leagueComp("uel", "欧联 Europa League",        UEL_TEAMS, "欧洲联赛 · 参赛球队池 60 · 资格赛 QR1–QR3 真实赛程（北京时间）；联赛阶段抽签后补", "uel30", "uel31"), { realSchedule:UEL_SCHED }),
     uecl:Object.assign(leagueComp("uecl","欧协联 Conference League", UECL_TEAMS,"欧洲协会联赛 · 参赛球队池 20 · 联赛阶段抽签后补赛程（当前 TBD）", "uecl1", "uecl2"), { realSchedule:UECL_SCHED }),
+    usc: Object.assign(leagueComp("usc", "欧超杯 UEFA Super Cup", USC_TEAMS, "欧洲超级杯 · PSG vs 阿斯顿维拉 · 2026-08-12 萨尔茨堡（北京时间 8/13 03:00）", "usc1", "usc2"), { realSchedule:USC_SCHED }),
     acl: leagueComp("acl", "亚冠精英 AFC Champions Elite",ACL_TEAMS,"亚足联冠军联赛精英 · 参赛球队池 24", "acl1", "acl5"),
+    lib: Object.assign(leagueComp("lib", "解放者杯 Copa Libertadores", LIB_TEAMS, "南美解放者杯 · 2026 十六强双回合真实赛程（北京时间；Tolima–IDV 已改期）", "lib9", "lib12"), { realSchedule:LIB_SCHED }),
     euro:leagueComp("euro","欧洲杯 UEFA Euro",          EURO_TEAMS,"欧洲足球锦标赛 · 国家队池 24", "euro1", "euro3"),
     copa:leagueComp("copa","美洲杯 Copa América",       COPA_TEAMS,"南美足球锦标赛 · 国家队池 16", "copa1", "copa2"),
     ac:  leagueComp("ac",  "亚洲杯 AFC Asian Cup",      AC_TEAMS,  "亚洲足球锦标赛 · 国家队池 24", "ac1", "ac2"),
@@ -4311,7 +4373,7 @@
   // Selector layout: grouped by region for a manageable 30+ option list (<optgroup>).
   const COMP_GROUPS = [
     { label:"国际大赛 International", ids:["wc", "euro", "copa", "ac"] },
-    { label:"洲际俱乐部 Continental Clubs", ids:["ucl", "uqr", "uel", "uecl", "acl"] },
+    { label:"洲际俱乐部 Continental Clubs", ids:["ucl", "uqr", "uel", "uecl", "usc", "acl", "lib"] },
     { label:"欧洲联赛 European Leagues", ids:["epl", "es", "it", "de", "de2", "fr", "fr2", "ec", "elc", "nl", "nl2", "pt", "sc", "be", "tr", "ru", "se", "fi", "no"] },
     { label:"亚洲 / 大洋洲 Asia & Oceania", ids:["jp", "jp2", "kl", "au", "sd"] },
     { label:"美洲 Americas", ids:["us", "br", "cb", "ar", "mx"] },
@@ -6495,7 +6557,8 @@
     "澳超": ["au"], "美职": ["us"], "MLS": ["us"],
     "巴甲": ["br"], "巴西杯": ["cb", "br"], "阿甲": ["ar"], "墨超": ["mx"],
     "欧冠": ["uqr", "ucl"], "欧洲冠军联赛": ["uqr", "ucl"], "欧罗巴": ["uel"], "欧联": ["uel"],
-    "欧协": ["uecl"], "亚冠": ["acl"],
+    "欧协": ["uecl"], "欧超杯": ["usc"], "欧洲超级杯": ["usc"], "超杯": ["usc"],
+    "亚冠": ["acl"], "解放者杯": ["lib"], "解放者": ["lib"], "南美解放者杯": ["lib"],
   };
   const JC_EXTRA_ALIAS = {
     // 通用缩写 / 欧战
@@ -6504,11 +6567,25 @@
     "萨巴赫": "萨巴赫", "费内巴切": "费内巴切", "格风暴": "格拉茨风暴", "库奥皮奥": "库奥皮奥",
     "克拉约瓦": "克拉约瓦", "比亚韦": "比亚韦斯托克", "流浪者": "格拉斯哥流浪者", "塞萨洛": "帕奥克",
     "安德莱": "安德莱赫特", "本菲卡": "本菲卡", "哈茨": "哈茨", "里昂": "里昂",
+    // 欧超杯
+    "巴黎圣日耳曼": "巴黎圣日耳曼", "PSG": "巴黎圣日耳曼",
+    "阿斯顿维拉": "阿斯顿维拉", "维拉": "阿斯顿维拉",
     // 巴西 / 体彩缩写
     "里莫": "里莫", "雷莫": "里莫", "维多利亚": "维多利亚", "胜利": "维多利亚",
     "弗鲁米嫩": "弗鲁米嫩", "弗鲁米嫩塞": "弗鲁米嫩", "达伽马": "瓦斯科达伽马", "巴竞技": "巴拉纳竞技",
-    "福塔雷萨": "福塔雷萨", "青年人": "青年人", "米拉索尔": "米拉索",
+    "福塔雷萨": "福塔雷萨", "青年人": "青年人", "米拉索尔": "米拉索尔", "米拉索": "米拉索尔",
     "格雷米奥": "格雷米奥", "圣保罗": "圣保罗", "博塔弗戈": "博塔弗戈",
+    "帕梅拉斯": "帕梅拉斯", "帕尔梅拉斯": "帕梅拉斯", "弗拉门戈": "弗拉门戈", "克鲁塞罗": "克鲁塞罗", "科林蒂安": "科林蒂安",
+    // 解放者杯 / 南美（体彩缩写对齐）
+    "独立里瓦达维亚": "独立里瓦达维亚", "里瓦达维亚": "独立里瓦达维亚",
+    "拉普拉塔大学生": "拉普拉塔大学生", "拉普拉塔": "拉普拉塔大学生",
+    "天主教大学": "天主教大学", "智利天主教": "天主教大学",
+    "托利马": "托利马", "独立山谷": "独立山谷", "山谷独立": "独立山谷",
+    "普拉滕斯": "普拉滕斯", "普拉滕塞": "普拉滕斯",
+    "科金博联": "科金博联", "科金博联合": "科金博联", "科金博": "科金博联",
+    "波特诺": "波特诺", "波特诺山丘": "波特诺", "塞罗波特诺": "波特诺", "塞罗波特": "波特诺",
+    "基多体大": "基多体大", "基多体育大学": "基多体大", "基多大学": "基多体大", "基多LDU": "基多体大",
+    "罗萨里奥中央": "罗萨里奥中央", "罗萨里奥": "罗萨里奥中央",
     // 英格兰
     "女王巡游": "女王公园巡游者", "女王公园": "女王公园巡游者", "QPR": "女王公园巡游者",
     "西汉姆": "西汉姆联", "朴茨茅斯": "朴次茅斯", "狼队": "狼队", "雷克瑟姆": "雷克瑟姆",
